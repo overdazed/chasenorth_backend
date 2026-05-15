@@ -13,4 +13,4 @@ restartPolicyMaxRetries = 10
 
 [environment]
 NODE_ENV = "production"
-NIXPACKS_NODE_VERSION = "18"
+NIXPACKS_NODE_VERSION = "22"
