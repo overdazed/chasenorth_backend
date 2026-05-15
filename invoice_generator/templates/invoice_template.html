@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice #{{ invoice_number }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 15mm 18mm 15mm; /* bottom margin = footer zone */
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 80px; /* reserve space for footer */
+        }
+        .address p {
+            margin: 0;
+            line-height: 1.4;
+        }
+        .address-block {
+            margin-top: 60px;
+            margin-bottom: 30px;
+        }
+        .container {
+            width: 700px;
+        }
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            vertical-align: top;
+            padding: 0;
+        }
+        .logo {
+            height: 48px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            padding: 0;
+        }
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .items-table th {
+            background-color: #5c6ac4;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #5c6ac4;
+        }
+        .items-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+        .items-table td.text-right {
+            text-align: right;
+        }
+        .items-table td.center {
+            text-align: center;
+        }
+        .totals-wrapper {
+            background: rgba(92, 106, 196, 0.05);
+            width: 100%;
+            margin-left: auto;
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .totals-table {
+            /*width: 280px;*/
+            width: 35%;
+            float: none;
+            /*margin-left: auto;*/
+            margin-left: 55%;
+            border-collapse: collapse;
+            /*margin-top: 10px;*/
+        }
+        .totals-table td {
+            padding: 6px 8px;
+        }
+        .totals-table td:first-child {
+            /*padding-left: 24px;*/
+            text-align: right;
+            padding-left: 12px;
+            color: #94a3b8;
+        }
+        .totals-table td:last-child {
+            border-bottom: 1px solid #e5e7eb;
+            text-align: right;
+            font-weight: bold;
+            color: #5c6ac4;
+        }
+        .totals-table .total-row {
+            position: relative;
+        }
+        .totals-table .total-row td:first-child {
+            color: #94a3b8;
+        }
+        .totals-table .total-row td:last-child {
+            background-color: #5c6ac4;
+            color: white;
+            position: relative;
+        }
+        .totals-table .total-row td:last-child::before {
+            content: '';
+            position: absolute;
+            left: -100px;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            background-color: #5c6ac4;
+        }
+        .section.payment-details {
+            margin: 20px 0 0 0;          /* remove the 10px top/bottom margin */
+            padding: 0;         /* optional, just in case */
+        }
+        .payment-details p {
+            margin: 0;          /* remove all top/bottom spacing */
+            line-height: 1.2;   /* tight but readable */
+        }
+        .payment-details p.bold {
+            margin-bottom: 4px; /* small spacing for the title only */
+        }
+        .notes {
+            margin: 10px 0;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 18mm;
+            border-top: 1px solid #e5e7eb;
+            padding: 6mm 20px 4mm;
+            text-align: center;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .text-main {
+            color: #5c6ac4;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-neutral-600 {
+            color: #525252;
+        }
+        .text-neutral-700 {
+            color: #404040;
+        }
+        .bg-slate-100 {
+            background-color: #f1f5f9;
+            padding: 12px;
+        }
+        .whitespace-nowrap {
+            white-space: nowrap;
+        }
+        .border-b {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .border-r {
+            border-right: 1px solid #e5e7eb;
+        }
+        .border-main {
+            border-color: #5c6ac4;
+        }
+        .border-b-2 {
+            border-bottom: 2px solid #5c6ac4;
+        }
+        .italic {
+            font-style: italic;
+        }
+        .text-xs {
+            font-size: 12px;
+        }
+        .text-neutral-500 {
+            color: #9ca3af;
+        }
+        .text-red-600 {
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <table class="header-table">
+            <tr>
+                <td>
+                    <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png"
+                        class="logo" alt="Brand Logo" />
+                </td>
+                <td class="text-right">
+                    <table class="info-table">
+                        <tr>
+                            <td class="border-r">
+                                <div style="padding-right: 16px;">
+                                    <div class="whitespace-nowrap text-neutral-500">Date</div>
+                                    <div class="whitespace-nowrap bold text-main text-right">{{ invoice_date }}</div>
+                                </div>
+                            </td>
+                            <td style="padding-left: 16px;">
+                                <div class="whitespace-nowrap text-neutral-500">Invoice #</div>
+                                <div class="whitespace-nowrap bold text-main text-right">{{ invoice_number }}</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Billing Address -->
+        <div class="bg-slate-100 address-block">
+            <table class="header-table">
+                <tr>
+                    <td width="350" class="text-neutral-600 address">
+                        <p class="bold text-main">{{ company_name }}</p>
+                        <p>USt-ID-Nr.: {{ company_vat }}</p>
+                        <p>{{ company_contact_name }}</p>
+                        <p>{{ company_address }}</p>
+                        <p>{{ company_zip }} {{ company_city }}</p>
+                        <p>{{ company_country }}</p>
+                    </td>
+                    <td width="350" class="text-right text-neutral-600 address">
+                        {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
+                        <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.company %}
+                        <p>{{ order.shippingAddress.company }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.address %}
+                        <p>{{ order.shippingAddress.address }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.address2 %}
+                        <p>{{ order.shippingAddress.address2 }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
+                        <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.state %}
+                        <p>{{ order.shippingAddress.state }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.country %}
+                        <p>{{ order.shippingAddress.country }}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Items Table -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th class="text-right">Price</th>
+                    <th class="center">Qty</th>
+                    <th class="center">VAT</th>
+                    <th class="text-right">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set subtotal = 0 %}
+                {% for item in order.orderItems %}
+                {% set item_total = item.price * item.quantity %}
+                {% set subtotal = subtotal + item_total %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <div class="text-neutral-700">{{ item.name }}</div>
+                        <div class="text-xs text-neutral-500">
+                            {% if item.color %}{{ item.color }}{% if item.size %} | {% endif %}{% endif %}
+                            {% if item.size %}{{ item.size }}{% endif %}
+                        </div>
+                    </td>
+                    <td class="text-right">{{ "%.2f"|format(item.price) }} €</td>
+                    <td class="center">{{ item.quantity }}</td>
+                    <td class="center">{{ order.taxRate }}%</td>
+                    <td class="text-right text-neutral-600">{{ "%.2f"|format(item_total) }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="totals-wrapper">
+            <table class="totals-table">
+                <tr>
+                    <td>Subtotal:</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.subtotal) }} €</td>
+                </tr>
+                {% if order.discount and order.discount.amount > 0 %}
+                <tr>
+                    <td>Discount:</td>
+                    <td class="text-red-600">-{{ "%.2f"|format(order.discount.amount) }} €</td>
+                </tr>
+                {% endif %}
+                {% if order.tax and order.tax > 0 %}
+                <tr>
+                    <td>Tax ({{ order.taxRate }}%):</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.tax) }}€</td>
+                </tr>
+                {% endif %}
+                {% if order.shippingCost and order.shippingCost > 0 %}
+                <tr>
+                    <td>Shipping:</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.shippingCost) }} €</td>
+                </tr>
+                {% endif %}
+                <tr class="total-row">
+                    <td>Total:</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.total) }} €</td>
+                </tr>
+            </table>
+        </div>
+        <div style="clear: both;"></div>
+
+        <!-- Payment Details -->
+        <div class="section payment-details text-neutral-700">
+            <p class="bold text-main">PAYMENT DETAILS</p>
+            <p>Bank Name: {{ company_bank_name or 'Your Bank Name' }}</p>
+            <p>IBAN: {{ company_iban or 'DE89 3704 0044 0532 0130 00' }}</p>
+            <p>BIC: {{ company_bic or 'COBADEFFXXX' }}</p>
+        </div>
+
+        <!-- Notes -->
+        <div class="section notes text-neutral-700">
+            <p class="bold text-main">Notes</p>
+            <p class="italic">Thank you for your order!</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>{{ company_name }} | {{ company_address }}, {{ company_zip }} {{ company_city }}, {{ company_country }} | {{ company_email }} | {{ company_phone }}</p>
+    </div>
+</body>
+</html>

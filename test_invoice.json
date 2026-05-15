@@ -1,0 +1,44 @@
+{
+  "order_data": {
+    "items": [
+      {
+        "name": "Test Item",
+        "description": "",
+        "quantity": 1,
+        "price": 100,
+        "total": 100,
+        "size": "M",
+        "color": "Blue"
+      }
+    ],
+    "subtotal": 100,
+    "discount": null,
+    "tax": 18,
+    "shippingCost": 10,
+    "total": 128,
+    "orderDate": "2024-01-15T10:00:00.000Z",
+    "orderId": "507f1f77bcf86cd799439011",
+    "notes": "Thank you for your order!",
+    "shippingAddress": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "address": "123 Test St",
+      "city": "Test City",
+      "postalCode": "12345",
+      "country": "Germany"
+    }
+  },
+  "company_data": {
+    "name": "ChaseNorth",
+    "contact_name": "Svetlana Pantschenko",
+    "vat": "TAX123456789",
+    "address": "Kantstr. 10",
+    "city": "Nienburg (Weser)",
+    "zip": "31582",
+    "country": "DE",
+    "email": "shop@chasenorth.com",
+    "phone": "+49 162 9194171",
+    "website": "www.chasenorth.com",
+    "tax_rate": 18
+  }
+}

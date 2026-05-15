@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice #{{ invoice_number }}</title>
+    <style>
+        *,
+        ::before,
+        ::after {
+            box-sizing: border-box;
+            border-width: 0;
+            border-style: solid;
+            border-color: #e5e7eb;
+        }
+
+        ::before,
+        ::after {
+            --tw-content: '';
+        }
+
+        html {
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+            -moz-tab-size: 4;
+            tab-size: 4;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-feature-settings: normal;
+            font-variation-settings: normal;
+        }
+
+        body {
+            margin: 0;
+            line-height: inherit;
+            color: #404040; /* Change color to #404040 */
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* Table and Layout Utilities */
+        .table {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-fixed {
+            table-layout: fixed;
+        }
+
+        .w-1\/2 {
+            width: 50%;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .align-top {
+            vertical-align: top;
+        }
+
+        .border-collapse {
+            border-collapse: collapse;
+        }
+
+        .border-spacing-0 {
+            border-spacing: 0;
+        }
+
+        /* Spacing Utilities */
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+        .px-14 { padding-left: 3.5rem; padding-right: 3.5rem; }
+        .pl-2 { padding-left: 0.5rem; }
+        .pl-3 { padding-left: 0.75rem; }
+        .pl-4 { padding-left: 1rem; }
+        .pr-2 { padding-right: 0.5rem; }
+        .pr-3 { padding-right: 0.75rem; }
+        .pr-4 { padding-right: 1rem; }
+        .pt-2 { padding-top: 0.5rem; }
+        .pb-2 { padding-bottom: 0.5rem; }
+        .pb-3 { padding-bottom: 0.75rem; }
+        .pb-4 { padding-bottom: 1rem; }
+        .pb-6 { padding-bottom: 1.5rem; }
+        .pb-8 { padding-bottom: 2rem; }
+        .pb-10 { padding-bottom: 2.5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mt-10 { margin-top: 2.5rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .ml-auto { margin-left: auto; }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 3.5rem;
+        }
+
+        .logo {
+            height: 3rem;
+        }
+
+        .invoice-meta {
+            text-align: right;
+        }
+
+        /* Billing Info */
+        .billing-section {
+            background-color: #f8fafc;
+            /*padding: 0rem 0rem;*/
+        }
+
+        .company-info, .customer-info {
+            flex: 1;
+        }
+
+        .customer-info {
+            text-align: right;
+        }
+
+        /* Items Table */
+        .items-section {
+            padding: 2.5rem 3.5rem;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .items-table th,
+        .items-table td {
+            padding: 0.75rem 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .border-main {
+            border-color: #5c6ac4;
+        }
+
+        .text-main {
+            color: #5c6ac4;
+        }
+
+        .bg-main {
+            background-color: #5c6ac4;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Utility Classes */
+        .text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+            line-height: 1rem;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .text-neutral-600 {
+            color: #525252;
+        }
+
+        .text-neutral-700 {
+            color: #404040;
+        }
+
+        .text-slate-400 {
+            color: #94a3b8;
+        }
+
+        .text-white {
+            color: #fff;
+        }
+
+        .whitespace-nowrap {
+            white-space: nowrap;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .justify-end {
+            justify-content: flex-end;
+        }
+
+        .w-64 {
+            width: 16rem;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .py-2 {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .py-3 {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .px-3 {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+
+        .py-4 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .px-14 {
+            padding-left: 3.5rem;
+            padding-right: 3.5rem;
+        }
+
+        .py-6 {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .py-10 {
+            padding-top: 2.5rem;
+            padding-bottom: 2.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .border-b {
+            border-bottom-width: 1px;
+        }
+
+        .border-b-2 {
+            border-bottom-width: 2px;
+        }
+
+        .border-t {
+            border-top-width: 1px;
+        }
+
+        .border-neutral-200 {
+            border-color: #e5e7eb;
+        }
+
+        /* Typography */
+        .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+
+        .text-3xl {
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+        }
+
+        .font-normal { font-weight: 400; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .uppercase { text-transform: uppercase; }
+        .lowercase { text-transform: lowercase; }
+        .capitalize { text-transform: capitalize; }
+        .normal-case { text-transform: none; }
+
+        .whitespace-nowrap { white-space: nowrap; }
+        .whitespace-pre { white-space: pre; }
+        .whitespace-pre-line { white-space: pre-line; }
+        .whitespace-pre-wrap { white-space: pre-wrap; }
+
+        /* Colors */
+        .text-red-600 { color: #dc2626; }
+        .text-green-600 { color: #16a34a; }
+        .text-blue-600 { color: #2563eb; }
+        .text-yellow-600 { color: #ca8a04; }
+        .text-purple-600 { color: #9333ea; }
+        .text-pink-600 { color: #db2777; }
+        .text-indigo-600 { color: #4f46e5; }
+
+        .bg-red-100 { background-color: #fee2e2; }
+        .bg-green-100 { background-color: #dcfce7; }
+        .bg-blue-100 { background-color: #dbeafe; }
+        .bg-yellow-100 { background-color: #fef9c3; }
+        .bg-purple-100 { background-color: #f3e8ff; }
+        .bg-pink-100 { background-color: #fce7f3; }
+        .bg-indigo-100 { background-color: #e0e7ff; }
+
+        .bg-gray-50 { background-color: #f9fafb; }
+        .bg-gray-100 { background-color: #f3f4f6; }
+        .bg-gray-200 { background-color: #e5e7eb; }
+        .bg-gray-300 { background-color: #d1d5db; }
+        .bg-gray-400 { background-color: #9ca3af; }
+        .bg-gray-500 { background-color: #6b7280; }
+        .bg-gray-600 { background-color: #4b5563; }
+        .bg-gray-700 { background-color: #374151; }
+        .bg-gray-800 { background-color: #1f2937; }
+        .bg-gray-900 { background-color: #111827; }
+
+        /* Print Styles */
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print\:block { display: block !important; }
+            .print\:hidden { display: none !important; }
+
+            .break-inside-avoid {
+                break-inside: avoid;
+            }
+
+            .break-before-page {
+                break-before: page;
+            }
+
+            .break-after-page {
+                break-after: page;
+            }
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="px-14 py-6">
+        <table class="w-full border-collapse border-spacing-0">
+            <tbody>
+            <tr>
+                <td class="w-1/2 align-top">
+                    <div>
+                        <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png"
+                             class="h-12"
+                             alt="Brand Logo"/>
+                    </div>
+                </td>
+                <td class="w-1/2 align-top">
+                    <div class="text-right">
+                        <table class="ml-auto border-collapse border-spacing-0">
+                            <tbody>
+                            <tr>
+                                <td class="text-slate-400 pr-2">Date</td>
+                                <td class="font-bold text-main">{{ invoice_date }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-slate-400 pr-2">Invoice #</td>
+                                <td class="font-bold text-main">{{ invoice_number }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="billing-section">
+        <table class="w-full border-collapse">
+            <tbody>
+            <tr>
+                <td class="w-1/2 align-top">
+                    <div class="text-sm text-neutral-700">
+                        <p class="font-bold">{{ company_name }}</p>
+                        <p>USt-ID-Nr.: {{ company_vat }}</p>
+                        <p>{{ company_contact_name or '' }}</p>
+                        <p>{{ company_address }}</p>
+                        <p>{{ company_zip }} {{ company_city }}</p>
+                        <p>{{ company_country }}</p>
+                    </div>
+                </td>
+                <td class="w-1/2 align-top text-right">
+                    <div class="text-sm text-neutral-700">
+                        {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
+                        <p class="font-bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
+                        {% endif %}
+
+                        {% if order.shippingAddress.company %}
+                        <p>{{ order.shippingAddress.company }}</p>
+                        {% endif %}
+
+                        {% if order.shippingAddress.address %}
+                        <p>{{ order.shippingAddress.address }}</p>
+                        {% endif %}
+
+                        {% if order.shippingAddress.address2 %}
+                        <p>{{ order.shippingAddress.address2 }}</p>
+                        {% endif %}
+
+                        {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
+                        <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
+                        {% endif %}
+
+                        {% if order.shippingAddress.state %}
+                        <p>{{ order.shippingAddress.state }}</p>
+                        {% endif %}
+
+                        {% if order.shippingAddress.country %}
+                        <p>{{ order.shippingAddress.country }}</p>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="items-section">
+        <table class="items-table">
+            <thead>
+            <tr>
+                <th class="border-b-2 border-main pb-3 pl-3 font-bold text-main">#</th>
+                <th class="border-b-2 border-main pb-3 pl-2 font-bold text-main">Product details</th>
+                <th class="border-b-2 border-main pb-3 pl-2 text-right font-bold text-main">Price</th>
+                <th class="border-b-2 border-main pb-3 pl-2 text-center font-bold text-main">Qty</th>
+                <th class="border-b-2 border-main pb-3 pl-2 text-right font-bold text-main">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set subtotal = 0 %}
+            {% for item in order.orderItems %}
+            {% set item_total = item.price * item.quantity %}
+            {% set subtotal = subtotal + item_total %}
+            <tr>
+                <td class="border-b py-3 pl-3 text-neutral-600">{{ loop.index }}.</td>
+                <td class="border-b py-3 pl-2">
+                    <div class="font-medium text-neutral-700">{{ item.name }}</div>
+                    <div class="text-xs text-neutral-500">
+                        {% if item.color %}{{ item.color }}{% if item.size %} | {% endif %}{% endif %}
+                        {% if item.size %}{{ item.size }}{% endif %}
+                    </div>
+                </td>
+                <td class="border-b py-3 pl-2 text-right text-neutral-600">${{ "%.2f"|format(item.price) }}</td>
+                <td class="border-b py-3 pl-2 text-center text-neutral-600">{{ item.quantity }}</td>
+                <td class="border-b py-3 pl-2 pr-3 text-right text-neutral-600">${{ "%.2f"|format(item_total) }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="mt-6 flex justify-end">
+            <div class="w-64">
+                <div class="flex justify-between py-2">
+                    <span class="text-neutral-600">Subtotal:</span>
+                    <span class="font-medium">${{ "%.2f"|format(order.subtotal) }}</span>
+                </div>
+
+                {% if order.discount and order.discount.amount > 0 %}
+                <div class="flex justify-between py-2">
+                    <span class="text-neutral-600">Discount:</span>
+                    <span class="font-medium text-red-600">-${{ "%.2f"|format(order.discount.amount) }}</span>
+                </div>
+                {% set subtotal = subtotal - order.discount.amount %}
+                {% endif %}
+
+                {% if order.tax and order.tax > 0 %}
+                <div class="flex justify-between py-2">
+                    <span class="text-neutral-600">Tax ({{ order.taxRate }}%):</span>
+                    <span class="font-medium">${{ "%.2f"|format(order.tax) }}</span>
+                </div>
+                {% endif %}
+
+                {% if order.shippingCost and order.shippingCost > 0 %}
+                <div class="flex justify-between py-2">
+                    <span class="text-neutral-600">Shipping:</span>
+                    <span class="font-medium">${{ "%.2f"|format(order.shippingCost) }}</span>
+                </div>
+                {% endif %}
+
+                <div class="flex justify-between py-3 border-t border-neutral-200 mt-2">
+                    <span class="font-bold">Total:</span>
+                    <span class="font-bold">${{ "%.2f"|format(order.total) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-14 py-6 text-sm text-neutral-700">
+        <p class="font-bold text-main mb-2">PAYMENT DETAILS</p>
+        <p>Bank Name: {{ company_bank_name or 'Your Bank Name' }}</p>
+        <p>IBAN: {{ company_iban or 'DE89 3704 0044 0532 0130 00' }}</p>
+        <p>BIC: {{ company_bic or 'COBADEFFXXX' }}</p>
+    </div>
+
+    <div class="px-14 py-6 text-sm text-neutral-700">
+        <p class="font-bold text-main mb-2">NOTES</p>
+        <p class="text-sm text-neutral-600">Thank you for your business. Please make your payment within 14 days of receiving this invoice.</p>
+    </div>
+
+    <footer class="border-t border-neutral-200 py-4 text-center text-xs text-neutral-500">
+        {{ company_name }} | {{ company_address }}, {{ company_zip }} {{ company_city }}, {{ company_country }} | {{ company_email }} | {{ company_phone }}
+    </footer>
+</div>
+</body>
+</html>
