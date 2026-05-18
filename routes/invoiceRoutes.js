@@ -39,13 +39,13 @@ router.post('/generate', protect, async (req, res) => {
                 size: item.size,
                 color: item.color
             })),
-            subtotal: order.price || 
+            subtotal: order.subtotal || 
                       orderItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0),
             discount: order.discount || null,
             tax: order.tax || 0,
             shippingCost: order.shippingCost || order.shippingPrice || 0, // Use shippingCost first, fallback to shippingPrice for backward compatibility
             total: order.totalPrice || 
-                   ((order.price || 0) + (order.tax || 0) + (order.shippingCost || order.shippingPrice || 0)),
+                   ((order.subtotal || 0) + (order.shippingCost || 0) - ((order.discount && order.discount.amount) || 0)),
             orderDate: order.paidAt || order.createdAt,
             orderId: order._id,
             notes: 'Thank you for your order!',
