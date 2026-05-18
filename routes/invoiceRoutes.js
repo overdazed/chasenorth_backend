@@ -74,7 +74,11 @@ router.post('/generate', protect, async (req, res) => {
             email: process.env.COMPANY_EMAIL,
             phone: process.env.COMPANY_PHONE,
             website: process.env.COMPANY_WEBSITE,
-            tax_rate: parseFloat(process.env.TAX_RATE)
+            tax_rate: parseFloat(process.env.TAX_RATE),
+            // Bank details
+            bank_name: process.env.COMPANY_BANK_NAME,
+            iban: process.env.COMPANY_IBAN,
+            bic: process.env.COMPANY_BIC
         };
 
         // Customer information
