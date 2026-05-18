@@ -11,7 +11,7 @@ const unlinkAsync = promisify(fs.unlink);
 
 class InvoiceService {
     constructor() {
-        this.pythonPath = process.env.PYTHON_PATH || 'py';
+        this.pythonPath = process.env.PYTHON_PATH || 'python3';
         this.scriptPath = path.join(__dirname, '../invoice_generator/invoice_generator.py');
     }
 

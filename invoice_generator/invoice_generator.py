@@ -232,30 +232,19 @@ class InvoiceGenerator:
             template = self.env.get_template('invoice_template.html')
             html_content = template.render(**context)
 
-            # Generate PDF filename
-            pdf_filename = f"invoice_{invoice_number}.pdf".replace(" ", "_")
-            pdf_path = os.path.join(self.output_dir, pdf_filename)
-
-            # Create PDF from HTML
-            with open(pdf_path, 'wb') as output_file:
-                pisa_status = pisa.CreatePDF(
-                    html_content,
-                    dest=output_file,
-                    encoding='UTF-8'
-                )
+            # Generate PDF in memory (no file system dependency)
+            from io import BytesIO
+            pdf_buffer = BytesIO()
+            pisa_status = pisa.CreatePDF(
+                html_content,
+                dest=pdf_buffer,
+                encoding='UTF-8'
+            )
 
             if pisa_status.err:
                 raise Exception(f'Error generating PDF: {pisa_status.err}')
 
-            # Read the generated PDF and encode as base64
-            with open(pdf_path, 'rb') as pdf_file:
-                pdf_content = pdf_file.read()
-
-            # Clean up the PDF file
-            try:
-                os.remove(pdf_path)
-            except:
-                pass
+            pdf_content = pdf_buffer.getvalue()
 
             # Return result as a dictionary
             result = {
