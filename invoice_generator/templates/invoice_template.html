@@ -41,16 +41,6 @@
         .logo {
             height: 48px;
         }
-        
-        /* Kontakt-Info oben rechts (Bild 1 Stil) */
-        .header-contact-small {
-            font-size: 10px;
-            text-align: right;
-            line-height: 1.3;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
         .info-table {
             width: 100%;
             border-collapse: collapse;
@@ -95,15 +85,19 @@
             justify-content: flex-end;
         }
         .totals-table {
+            /*width: 280px;*/
             width: 35%;
             float: none;
+            /*margin-left: auto;*/
             margin-left: 55%;
             border-collapse: collapse;
+            /*margin-top: 10px;*/
         }
         .totals-table td {
             padding: 6px 8px;
         }
         .totals-table td:first-child {
+            /*padding-left: 24px;*/
             text-align: right;
             padding-left: 12px;
             color: #94a3b8;
@@ -113,6 +107,12 @@
             text-align: right;
             font-weight: bold;
             color: #5c6ac4;
+        }
+        .totals-table .total-row {
+            position: relative;
+        }
+        .totals-table .total-row td:first-child {
+            color: #94a3b8;
         }
         .totals-table .total-row td:last-child {
             background-color: #5c6ac4;
@@ -128,17 +128,23 @@
             width: 100px;
             background-color: #5c6ac4;
         }
-        
-        /* Notes Bereich ohne Gap */
+        .section.payment-details {
+            margin: 20px 0 0 0;          /* remove the 10px top/bottom margin */
+            padding: 0;         /* optional, just in case */
+        }
+        .payment-details p {
+            margin: 0;          /* remove all top/bottom spacing */
+            line-height: 1.2;   /* tight but readable */
+        }
+        .payment-details p.bold {
+            margin-bottom: 4px; /* small spacing for the title only */
+        }
         .notes {
-            margin-top: 10px;
+            margin: 0;
         }
         .notes p {
-            margin: 0 !important;
-            padding: 0 !important;
-            line-height: 1.2;
+            margin: 0;
         }
-
         .footer {
             position: fixed;
             bottom: 0;
@@ -195,8 +201,17 @@
         .whitespace-nowrap {
             white-space: nowrap;
         }
+        .border-b {
+            border-bottom: 1px solid #e5e7eb;
+        }
         .border-r {
             border-right: 1px solid #e5e7eb;
+        }
+        .border-main {
+            border-color: #5c6ac4;
+        }
+        .border-b-2 {
+            border-bottom: 2px solid #5c6ac4;
         }
         .italic {
             font-style: italic;
@@ -214,6 +229,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <table class="header-table">
             <tr>
                 <td>
@@ -239,6 +255,7 @@
             </tr>
         </table>
 
+        <!-- Billing Address -->
         <div class="bg-slate-100 address-block">
             <table class="header-table">
                 <tr>
@@ -260,8 +277,14 @@
                         {% if order.shippingAddress.address %}
                         <p>{{ order.shippingAddress.address }}</p>
                         {% endif %}
+                        {% if order.shippingAddress.address2 %}
+                        <p>{{ order.shippingAddress.address2 }}</p>
+                        {% endif %}
                         {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
                         <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.state %}
+                        <p>{{ order.shippingAddress.state }}</p>
                         {% endif %}
                         {% if order.shippingAddress.country %}
                         <p>{{ order.shippingAddress.country }}</p>
@@ -271,6 +294,7 @@
             </table>
         </div>
 
+        <!-- Items Table -->
         <table class="items-table">
             <thead>
                 <tr>
@@ -286,6 +310,7 @@
                 {% set subtotal = 0 %}
                 {% for item in order.orderItems %}
                 {% set item_total = item.price * item.quantity %}
+                {% set subtotal = subtotal + item_total %}
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>
@@ -304,16 +329,29 @@
             </tbody>
         </table>
 
+        <!-- Totals -->
         <div class="totals-wrapper">
             <table class="totals-table">
                 <tr>
                     <td>Subtotal:</td>
                     <td class="text-red-600">{{ "%.2f"|format(order.subtotal) }} €</td>
                 </tr>
+                {% if order.discount and order.discount.amount > 0 %}
+                <tr>
+                    <td>Discount:</td>
+                    <td class="text-red-600">-{{ "%.2f"|format(order.discount.amount) }} €</td>
+                </tr>
+                {% endif %}
                 {% if order.tax and order.tax > 0 %}
                 <tr>
                     <td>Tax ({{ order.taxRate }}%):</td>
                     <td class="text-red-600">{{ "%.2f"|format(order.tax) }}€</td>
+                </tr>
+                {% endif %}
+                {% if order.shippingCost and order.shippingCost > 0 %}
+                <tr>
+                    <td>Shipping:</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.shippingCost) }} €</td>
                 </tr>
                 {% endif %}
                 <tr class="total-row">
@@ -324,12 +362,23 @@
         </div>
         <div style="clear: both;"></div>
 
+        <!-- Payment Details -->
+        <!-- <div class="section payment-details text-neutral-700">
+            <p class="bold text-main">PAYMENT DETAILS</p>
+            <p>Bank Name: {{ company_bank_name or 'Your Bank Name' }}</p>
+            <p>IBAN: {{ company_iban or 'DE89 3704 0044 0532 0130 00' }}</p>
+            <p>BIC: {{ company_bic or 'COBADEFFXXX' }}</p>
+        </div>
+        -->
+
+        <!-- Notes -->
         <div class="section notes text-neutral-700">
             <p class="bold text-main">Notes</p>
             <p class="italic">Thank you for your order!</p>
         </div>
     </div>
 
+    <!-- Footer -->
     <div class="footer">
         <table class="footer-table">
             <tr>
@@ -338,11 +387,13 @@
                     {{ company_address }}<br>
                     {{ company_zip }} {{ company_city }}
                 </td>
+                
                 <td class="footer-center">
                     USt-IdNr.: {{ company_vat }}<br>
                     Steuernummer: {{ company_steuernummer }}<br>
                     Inhaber: {{ company_contact_name }}
                 </td>
+                
                 <td class="footer-right">
                     <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
                     IBAN: {{ company_iban }}<br>
@@ -350,7 +401,10 @@
                 </td>
             </tr>
         </table>
-        <div class="page-counter">Seite 1 von 1</div>
+        
+        <div class="page-counter">
+            Seite 1 von 1
+        </div>
     </div>
 </body>
 </html>
