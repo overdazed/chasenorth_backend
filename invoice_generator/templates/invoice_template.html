@@ -290,7 +290,7 @@
             </thead>
             <tbody>
                 {% set subtotal = 0 %}
-                {% for item in (order.orderItems or []) %}
+                {% for item in order.orderItems %}
                 {% set item_total = item.price * item.quantity %}
                 {% set subtotal = subtotal + item_total %}
                 <tr>
