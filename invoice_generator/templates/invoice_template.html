@@ -7,7 +7,7 @@
     <style>
         @page {
             size: A4;
-            margin: 20mm 15mm 30mm 15mm; /* enough space for footer on every page */
+            margin: 20mm 15mm 32mm 15mm;
         }
         * {
             box-sizing: border-box;
@@ -17,7 +17,7 @@
             font-size: 14px;
             margin: 0;
             padding: 20px;
-            padding-bottom: 110px; /* reserve space for footer on every page */
+            padding-bottom: 120px; /* reserve space for footer on every page */
         }
         .address p {
             margin: 0;
@@ -140,7 +140,10 @@
             margin-bottom: 4px; /* small spacing for the title only */
         }
         .notes {
-            margin: 4px 0 0 0;
+            margin: 0;
+        }
+        .notes p {
+            margin: 0;
         }
         .footer {
             position: fixed;
