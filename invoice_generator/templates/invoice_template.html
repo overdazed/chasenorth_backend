@@ -252,39 +252,43 @@
             </tr>
         </table>
 
-        <!-- Sender + Customer Address -->
+        <!-- Billing Address -->
         <div class="bg-slate-100 address-block">
-            <!-- Company Header -->
-            <div style="margin-bottom: 12px;">
-                <p class="bold text-main">{{ company_name }}</p>
-                <p>{{ company_address }}</p>
-                <p>{{ company_zip }} {{ company_city }}, {{ company_country }}</p>
-            </div>
-
-            <!-- Customer Address -->
-            <div>
-                {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
-                <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
-                {% endif %}
-                {% if order.shippingAddress.company %}
-                <p>{{ order.shippingAddress.company }}</p>
-                {% endif %}
-                {% if order.shippingAddress.address %}
-                <p>{{ order.shippingAddress.address }}</p>
-                {% endif %}
-                {% if order.shippingAddress.address2 %}
-                <p>{{ order.shippingAddress.address2 }}</p>
-                {% endif %}
-                {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
-                <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
-                {% endif %}
-                {% if order.shippingAddress.state %}
-                <p>{{ order.shippingAddress.state }}</p>
-                {% endif %}
-                {% if order.shippingAddress.country %}
-                <p>{{ order.shippingAddress.country }}</p>
-                {% endif %}
-            </div>
+            <table class="header-table">
+                <tr>
+                    <td width="350" class="text-neutral-600 address">
+                        <p class="bold text-main">{{ company_name }}</p>
+                        <p>USt-ID-Nr.: {{ company_vat }}</p>
+                        <p>{{ company_contact_name }}</p>
+                        <p>{{ company_address }}</p>
+                        <p>{{ company_zip }} {{ company_city }}</p>
+                        <p>{{ company_country }}</p>
+                    </td>
+                    <td width="350" class="text-right text-neutral-600 address">
+                        {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
+                        <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.company %}
+                        <p>{{ order.shippingAddress.company }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.address %}
+                        <p>{{ order.shippingAddress.address }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.address2 %}
+                        <p>{{ order.shippingAddress.address2 }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
+                        <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.state %}
+                        <p>{{ order.shippingAddress.state }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.country %}
+                        <p>{{ order.shippingAddress.country }}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Items Table -->
