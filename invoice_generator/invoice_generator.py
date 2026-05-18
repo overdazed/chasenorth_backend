@@ -225,6 +225,7 @@ class InvoiceGenerator:
                 'company_bank_name': company_data.get('bank_name', ''),
                 'company_iban': company_data.get('iban', ''),
                 'company_bic': company_data.get('bic', ''),
+                'company_steuernummer': company_data.get('steuernummer', ''),
                 'invoice_number': invoice_number,
                 'invoice_date': datetime.now().strftime('%B %d, %Y'),
                 'due_date': (datetime.now() + relativedelta(days=30)).strftime('%B %d, %Y'),

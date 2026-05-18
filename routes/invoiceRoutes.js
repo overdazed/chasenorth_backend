@@ -78,7 +78,8 @@ router.post('/generate', protect, async (req, res) => {
             // Bank details
             bank_name: process.env.COMPANY_BANK_NAME,
             iban: process.env.COMPANY_IBAN,
-            bic: process.env.COMPANY_BIC
+            bic: process.env.COMPANY_BIC,
+            steuernummer: process.env.COMPANY_STEUERNUMMER
         };
 
         // Customer information
