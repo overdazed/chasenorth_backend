@@ -12,6 +12,15 @@ const unlinkAsync = promisify(fs.unlink);
 class InvoiceService {
     constructor() {
         this.pythonPath = process.env.PYTHON_PATH || 'python3';
+        // Fallbacks for different environments (Railway, Docker, etc.)
+        this.pythonCandidates = [
+            process.env.PYTHON_PATH,
+            'python3',
+            'python',
+            '/usr/bin/python3',
+            '/usr/local/bin/python3'
+        ].filter(Boolean);
+
         this.scriptPath = path.join(__dirname, '../invoice_generator/invoice_generator.py');
     }
 
@@ -35,14 +44,33 @@ class InvoiceService {
 
             await writeFileAsync(tempFile, JSON.stringify(data), 'utf8');
 
-            // Execute the Python script with the temp file path
-            const command = `"${this.pythonPath}" "${this.scriptPath}" "${tempFile}"`;
+            // Try different Python executables until one works
+            let stdout = '';
+            let stderr = '';
+            let lastError = null;
 
-            const { stdout, stderr } = await execAsync(command, {
-                maxBuffer: 1024 * 1024 * 10, // 10MB buffer for larger PDFs
-                encoding: 'utf8',
-                timeout: 60000 // 60 second timeout
-            });
+            for (const pythonCmd of this.pythonCandidates) {
+                try {
+                    const command = `"${pythonCmd}" "${this.scriptPath}" "${tempFile}"`;
+                    const result = await execAsync(command, {
+                        maxBuffer: 1024 * 1024 * 10,
+                        encoding: 'utf8',
+                        timeout: 60000
+                    });
+                    stdout = result.stdout;
+                    stderr = result.stderr;
+                    this.pythonPath = pythonCmd; // remember working one
+                    break;
+                } catch (err) {
+                    lastError = err;
+                    console.warn(`Python command failed with "${pythonCmd}": ${err.message}`);
+                    continue;
+                }
+            }
+
+            if (!stdout && lastError) {
+                throw lastError;
+            }
 
             console.log('Python stdout:', stdout);
             if (stderr) {
