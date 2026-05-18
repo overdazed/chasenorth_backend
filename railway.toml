@@ -1,8 +1,9 @@
 # Railway Configuration
-# This file tells Railway how to deploy your Node.js app
+# Using Dockerfile for reliable Node.js + Python support
 
 [build]
-builder = "NIXPACKS"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "node server.js"
