@@ -7,7 +7,10 @@
     <style>
         @page {
             size: A4;
-            margin: 20mm 15mm 30mm 15mm;
+            margin: 20mm 15mm 25mm 15mm;
+            @bottom {
+                content: element(footer);
+            }
         }
         * {
             box-sizing: border-box;
@@ -28,7 +31,7 @@
         }
         .container {
             width: 100%;
-            padding-bottom: 28mm;
+            padding-bottom: 10mm;
         }
         .header-table {
             width: 100%;
@@ -137,19 +140,15 @@
             line-height: 1.2;
         }
 
-        /* Fixed footer layout for automated A4 PDF engines */
+        /* Repeating footer for A4 PDF (xhtml2pdf) */
         .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 24mm;
+            position: running(footer);
+            height: 20mm;
             border-top: 1px solid #000;
             padding: 6px 15mm 4px 15mm;
             font-size: 10px;
             color: #333;
             background-color: white;
-            z-index: 1000;
         }
         .footer-table {
             width: 100%;
