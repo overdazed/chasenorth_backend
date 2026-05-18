@@ -377,16 +377,16 @@
         </div>
         
         <div class="footer-column">
-            USt-IdNr.: <br>
-            Steuernummer: <br>
-            Inhaber: Svetlana Pantschenko
+            USt-IdNr.: {{ company_vat }}<br>
+            Steuernummer: {{ company_steuernummer }}<br>
+            Inhaber: {{ company_contact_name }}
         </div>
         
         <div class="footer-column right">
             <strong>Bankverbindung</strong><br>
-            Bank: <br>
-            IBAN: <br>
-            BIC: 
+            Bank: {{ company_bank_name }}<br>
+            IBAN: {{ company_iban }}<br>
+            BIC: {{ company_bic }}
         </div>
     </div>
 </body>
