@@ -7,20 +7,19 @@
     <style>
         @page {
             size: A4;
-            /* Erhöhe den unteren Rand (bottom), um Platz für den Footer zu schaffen */
-            margin: 20mm 15mm 30mm 15mm;
+            margin: 20mm 15mm 28mm 15mm;
         }
         * {
             box-sizing: border-box;
         }
+        html, body {
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 14px;
-            margin: 0;
-            padding: 0;
-             /* Mindesthöhe für A4-Seite mit Fußzeile */
-             /* min-height: 277mm; */
-             /* Hintergrundfarbe für die gesamte Seite */
         }
         .address p {
             margin: 0;
@@ -32,7 +31,7 @@
         }
         .container {
             width: 100%;
-            padding-bottom: 28mm;
+            padding-bottom: 25mm;
         }
         .header-table {
             width: 100%;
@@ -144,18 +143,16 @@
         /* Fixed footer layout for automated A4 PDF engines */
         .footer {
             position: fixed;
-            /* Platziere den Footer im Bereich des unteren Page-Margins */
-            bottom: -20mm;
+            bottom: 0;
             left: 0;
             right: 0;
-            height: 24mm;
+            height: 22mm;
             border-top: 1px solid #000;
-            /* padding: 6px 15mm 4px 15mm; */
-            padding: 6px 0; /* Margin wird schon durch @page geregelt */
+            padding: 6px 15mm 4px 15mm;
             font-size: 10px;
             color: #333;
             background-color: white;
-            /* z-index: 1000; */
+            z-index: 1000;
         }
         .footer-table {
             width: 100%;
