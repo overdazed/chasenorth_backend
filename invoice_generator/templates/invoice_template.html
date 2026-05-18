@@ -7,42 +7,37 @@
     <style>
         @page {
             size: A4;
+            /* Der untere Rand (32mm) reserviert Platz für den Footer */
             margin: 20mm 15mm 32mm 15mm;
         }
         * {
             box-sizing: border-box;
         }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 14px;
-            margin: 0;
-            padding: 20px;
-            padding-bottom: 120px; /* reserve space for footer on every page */
-        }
-        .address p {
-            margin: 0;
+            /* Padding-bottom muss mindestens so groß wie die Footer-Höhe sein */
+            padding: 20px 0 130px 0; 
             line-height: 1.4;
-        }
-        .address-block {
-            margin-top: 60px;
-            margin-bottom: 30px;
         }
         .container {
             width: 700px;
+            margin: 0 auto;
         }
-        .header-table {
+        
+        /* Header & Tabellen Styling */
+        .header-table, .info-table, .items-table, .footer-table {
             width: 100%;
             border-collapse: collapse;
         }
-        .header-table td {
-            vertical-align: top;
-            padding: 0;
-        }
-        .logo {
-            height: 48px;
-        }
-        
-        /* Kontakt-Info oben rechts (Bild 1 Stil) */
+        .header-table td { vertical-align: top; }
+        .logo { height: 48px; }
+
         .header-contact-small {
             font-size: 10px;
             text-align: right;
@@ -51,165 +46,86 @@
             margin-bottom: 20px;
         }
 
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
+        .address-block {
+            margin-top: 60px;
+            margin-bottom: 30px;
+            background-color: #f1f5f9;
+            padding: 12px;
         }
-        .info-table td {
-            padding: 0;
-        }
-        .bill-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-        }
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .address p { margin: 0; line-height: 1.4; }
+
         .items-table th {
             background-color: #5c6ac4;
             color: white;
             padding: 8px;
             text-align: left;
             font-weight: bold;
-            border-bottom: 2px solid #5c6ac4;
         }
         .items-table td {
             padding: 8px;
             border-bottom: 1px solid #e5e7eb;
             vertical-align: top;
         }
-        .items-table td.text-right {
-            text-align: right;
-        }
-        .items-table td.center {
-            text-align: center;
-        }
+
+        /* Totals */
         .totals-wrapper {
-            background: rgba(92, 106, 196, 0.05);
-            width: 100%;
-            margin-left: auto;
             margin-top: 10px;
             display: flex;
             justify-content: flex-end;
         }
         .totals-table {
             width: 35%;
-            float: none;
-            margin-left: 55%;
+            margin-left: 65%;
             border-collapse: collapse;
         }
-        .totals-table td {
-            padding: 6px 8px;
-        }
-        .totals-table td:first-child {
-            text-align: right;
-            padding-left: 12px;
-            color: #94a3b8;
-        }
-        .totals-table td:last-child {
-            border-bottom: 1px solid #e5e7eb;
-            text-align: right;
-            font-weight: bold;
-            color: #5c6ac4;
-        }
+        .totals-table td { padding: 6px 8px; text-align: right; }
         .totals-table .total-row td:last-child {
             background-color: #5c6ac4;
             color: white;
-            position: relative;
+            font-weight: bold;
         }
-        .totals-table .total-row td:last-child::before {
-            content: '';
-            position: absolute;
-            left: -100px;
-            top: 0;
-            bottom: 0;
-            width: 100px;
-            background-color: #5c6ac4;
-        }
-        
-        /* Notes Bereich ohne Gap */
-        .notes {
-            margin-top: 10px;
-        }
+
+        /* Notes Bereich - Kein Gap */
+        .notes { margin-top: 15px; }
         .notes p {
             margin: 0 !important;
             padding: 0 !important;
             line-height: 1.2;
         }
 
+        /* FOOTER FIX - Stays at the bottom */
         .footer {
             position: fixed;
-            bottom: 0;
+            bottom: -15mm; /* Positionierung innerhalb des @page margins */
             left: 0;
             right: 0;
-            height: 26mm;
+            height: 28mm;
             border-top: 1px solid #000;
-            padding: 6px 15mm 4px 15mm;
+            padding-top: 10px;
             font-size: 10px;
             color: #333;
             background-color: white;
-            z-index: 1000;
         }
-        .footer-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+        
         .footer-table td {
             vertical-align: top;
             line-height: 1.4;
-            padding: 0;
+            width: 33.33%;
         }
-        .footer-center {
-            text-align: center;
-        }
-        .footer-right {
-            text-align: right;
-        }
+        .footer-center { text-align: center; }
+        .footer-right { text-align: right; }
         .page-counter {
             text-align: center;
-            margin-top: 6px;
-            width: 100%;
+            margin-top: 10px;
+            font-size: 9px;
         }
-        .bold {
-            font-weight: bold;
-        }
-        .text-main {
-            color: #5c6ac4;
-        }
-        .text-right {
-            text-align: right;
-        }
-        .text-neutral-600 {
-            color: #525252;
-        }
-        .text-neutral-700 {
-            color: #404040;
-        }
-        .bg-slate-100 {
-            background-color: #f1f5f9;
-            padding: 12px;
-        }
-        .whitespace-nowrap {
-            white-space: nowrap;
-        }
-        .border-r {
-            border-right: 1px solid #e5e7eb;
-        }
-        .italic {
-            font-style: italic;
-        }
-        .text-xs {
-            font-size: 12px;
-        }
-        .text-neutral-500 {
-            color: #9ca3af;
-        }
-        .text-red-600 {
-            color: #dc2626;
-        }
+
+        /* Hilfsklassen */
+        .bold { font-weight: bold; }
+        .text-main { color: #5c6ac4; }
+        .text-right { text-align: right; }
+        .italic { font-style: italic; }
+        .text-neutral-500 { color: #9ca3af; }
     </style>
 </head>
 <body>
@@ -217,55 +133,32 @@
         <table class="header-table">
             <tr>
                 <td>
-                    <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png"
-                        class="logo" alt="Brand Logo" />
+                    <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png" class="logo" alt="Logo" />
                 </td>
-                <td class="text-right">
-                    <table class="info-table">
-                        <tr>
-                            <td class="border-r">
-                                <div style="padding-right: 16px;">
-                                    <div class="whitespace-nowrap text-neutral-500">Date</div>
-                                    <div class="whitespace-nowrap bold text-main text-right">{{ invoice_date }}</div>
-                                </div>
-                            </td>
-                            <td style="padding-left: 16px;">
-                                <div class="whitespace-nowrap text-neutral-500">Invoice #</div>
-                                <div class="whitespace-nowrap bold text-main text-right">{{ invoice_number }}</div>
-                            </td>
-                        </tr>
-                    </table>
+                <td>
+                    <div class="header-contact-small">
+                        <strong>{{ company_name }}</strong><br>
+                        {{ company_address }}<br>
+                        {{ company_zip }} {{ company_city }}<br><br>
+                        Telefon: {{ company_phone or '0234 / 500 60 10' }}<br>
+                        E-Mail: {{ company_email or 'info@muellertest.de' }}
+                    </div>
                 </td>
             </tr>
         </table>
 
-        <div class="bg-slate-100 address-block">
+        <div class="address-block">
             <table class="header-table">
                 <tr>
-                    <td width="350" class="text-neutral-600 address">
+                    <td class="address">
                         <p class="bold text-main">{{ company_name }}</p>
-                        <p>USt-ID-Nr.: {{ company_vat }}</p>
-                        <p>{{ company_contact_name }}</p>
                         <p>{{ company_address }}</p>
                         <p>{{ company_zip }} {{ company_city }}</p>
-                        <p>{{ company_country }}</p>
                     </td>
-                    <td width="350" class="text-right text-neutral-600 address">
-                        {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
+                    <td class="text-right address">
                         <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.company %}
-                        <p>{{ order.shippingAddress.company }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.address %}
                         <p>{{ order.shippingAddress.address }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
                         <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.country %}
-                        <p>{{ order.shippingAddress.country }}</p>
-                        {% endif %}
                     </td>
                 </tr>
             </table>
@@ -277,28 +170,18 @@
                     <th>#</th>
                     <th>Product</th>
                     <th class="text-right">Price</th>
-                    <th class="center">Qty</th>
-                    <th class="center">VAT</th>
-                    <th class="text-right">Subtotal</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Total</th>
                 </tr>
             </thead>
             <tbody>
-                {% set subtotal = 0 %}
                 {% for item in order.orderItems %}
-                {% set item_total = item.price * item.quantity %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <td>
-                        <div class="text-neutral-700">{{ item.name }}</div>
-                        <div class="text-xs text-neutral-500">
-                            {% if item.color %}{{ item.color }}{% if item.size %} | {% endif %}{% endif %}
-                            {% if item.size %}{{ item.size }}{% endif %}
-                        </div>
-                    </td>
+                    <td>{{ item.name }}</td>
                     <td class="text-right">{{ "%.2f"|format(item.price) }} €</td>
-                    <td class="center">{{ item.quantity }}</td>
-                    <td class="center">{{ order.taxRate }}%</td>
-                    <td class="text-right text-neutral-600">{{ "%.2f"|format(item_total) }} €</td>
+                    <td class="text-right">{{ item.quantity }}</td>
+                    <td class="text-right">{{ "%.2f"|format(item.price * item.quantity) }} €</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -308,49 +191,43 @@
             <table class="totals-table">
                 <tr>
                     <td>Subtotal:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.subtotal) }} €</td>
+                    <td>{{ "%.2f"|format(order.subtotal) }} €</td>
                 </tr>
-                {% if order.tax and order.tax > 0 %}
-                <tr>
-                    <td>Tax ({{ order.taxRate }}%):</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.tax) }}€</td>
-                </tr>
-                {% endif %}
                 <tr class="total-row">
-                    <td>Total:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.total) }} €</td>
+                    <td class="bold">Total:</td>
+                    <td class="bold">{{ "%.2f"|format(order.total) }} €</td>
                 </tr>
             </table>
         </div>
-        <div style="clear: both;"></div>
 
-        <div class="section notes text-neutral-700">
+        <div class="notes">
             <p class="bold text-main">Notes</p>
             <p class="italic">Thank you for your order!</p>
         </div>
     </div>
 
     <div class="footer">
-        <table class="footer-table">
-            <tr>
-                <td>
-                    <strong>{{ company_name }}</strong><br>
-                    {{ company_address }}<br>
-                    {{ company_zip }} {{ company_city }}
-                </td>
-                <td class="footer-center">
-                    USt-IdNr.: {{ company_vat }}<br>
-                    Steuernummer: {{ company_steuernummer }}<br>
-                    Inhaber: {{ company_contact_name }}
-                </td>
-                <td class="footer-right">
-                    <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
-                    IBAN: {{ company_iban }}<br>
-                    BIC: {{ company_bic }}
-                </td>
-            </tr>
-        </table>
-        <div class="page-counter">Seite 1 von 1</div>
+        <div class="container">
+            <table class="footer-table">
+                <tr>
+                    <td>
+                        <strong>{{ company_name }}</strong><br>
+                        {{ company_address }}<br>
+                        {{ company_zip }} {{ company_city }}
+                    </td>
+                    <td class="footer-center">
+                        USt-IdNr.: {{ company_vat }}<br>
+                        Inhaber: {{ company_contact_name }}
+                    </td>
+                    <td class="footer-right">
+                        <strong>{{ company_bank_name }}</strong><br>
+                        IBAN: {{ company_iban }}<br>
+                        BIC: {{ company_bic }}
+                    </td>
+                </tr>
+            </table>
+            <div class="page-counter">Seite 1 von 1</div>
+        </div>
     </div>
 </body>
 </html>
