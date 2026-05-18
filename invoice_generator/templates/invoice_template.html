@@ -159,7 +159,7 @@
         }
         .footer-table td {
             vertical-align: top;
-            line-height: 1.4;
+            line-height: 0.5;
             padding: 0;
         }
         .footer-center {
@@ -365,11 +365,13 @@
                     {{ company_zip }} {{ company_city }}
                 </td>
                 <td class="footer-center">
+                    <br>
                     USt-IdNr.: {{ company_vat }}<br>
                     Steuernummer: {{ company_steuernummer }}<br>
                     Inhaber: {{ company_contact_name }}
                 </td>
                 <td class="footer-right">
+                    <br>
                     <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
                     IBAN: {{ company_iban }}<br>
                     BIC: {{ company_bic }}
