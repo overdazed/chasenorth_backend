@@ -7,7 +7,8 @@
     <style>
         @page {
             size: A4;
-            margin: 20mm 15mm 32mm 15mm;
+            /* Bottom margin must be large enough to house the footer safely */
+            margin: 20mm 15mm 35mm 15mm;
         }
         * {
             box-sizing: border-box;
@@ -136,17 +137,17 @@
             line-height: 1.2;
         }
 
-        /* Fixed footer layout for automated A4 PDF engines */
+        /* Fixed footer layout for multi-page PDF generation engines */
         .footer {
             position: fixed;
-            bottom: -25mm; /* Moves footer perfectly into the @page margin area */
+            bottom: -28mm; /* Fits cleanly into the 35mm page margin */
             left: 0;
             right: 0;
             height: 26mm;
-            border-top: 1px solid #000;
-            padding-top: 8px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 12px;
             font-size: 10px;
-            color: #333;
+            color: #4b5563;
             background-color: white;
         }
         .footer-table {
@@ -156,7 +157,7 @@
         }
         .footer-table td {
             vertical-align: top;
-            line-height: 1.4;
+            line-height: 1.5;
             padding: 0;
         }
         .footer-center {
@@ -167,9 +168,13 @@
         }
         .page-counter {
             text-align: center;
-            margin-top: 6px;
+            margin-top: 10px;
             width: 100%;
+            font-size: 9px;
+            color: #9ca3af;
         }
+        
+        /* Utility styles */
         .bold {
             font-weight: bold;
         }
@@ -204,9 +209,6 @@
         .text-neutral-500 {
             color: #9ca3af;
         }
-        .text-red-600 {
-            color: #dc2626;
-        }
     </style>
 </head>
 <body>
@@ -237,7 +239,7 @@
             </tr>
         </table>
 
-        <!-- Adressblock -->
+        <!-- Address Block -->
         <div class="bg-slate-100 address-block">
             <table class="header-table">
                 <tr>
@@ -276,7 +278,7 @@
             </table>
         </div>
 
-        <!-- Artikeltabelle -->
+        <!-- Items Table -->
         <table class="items-table">
             <thead>
                 <tr>
@@ -311,47 +313,47 @@
             </tbody>
         </table>
 
-        <!-- Gesamtsummen -->
+        <!-- Totals -->
         <div class="totals-wrapper">
             <table class="totals-table">
                 <tr>
                     <td>Subtotal:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.subtotal) }} €</td>
+                    <td>{{ "%.2f"|format(order.subtotal) }} €</td>
                 </tr>
                 {% if order.discount and order.discount.amount > 0 %}
                 <tr>
                     <td>Discount:</td>
-                    <td class="text-red-600">-{{ "%.2f"|format(order.discount.amount) }} €</td>
+                    <td>-{{ "%.2f"|format(order.discount.amount) }} €</td>
                 </tr>
                 {% endif %}
                 {% if order.tax and order.tax > 0 %}
                 <tr>
                     <td>Tax ({{ order.taxRate }}%):</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.tax) }}€</td>
+                    <td>{{ "%.2f"|format(order.tax) }} €</td>
                 </tr>
                 {% endif %}
                 {% if order.shippingCost and order.shippingCost > 0 %}
                 <tr>
                     <td>Shipping:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.shippingCost) }} €</td>
+                    <td>{{ "%.2f"|format(order.shippingCost) }} €</td>
                 </tr>
                 {% endif %}
                 <tr class="total-row">
                     <td>Total:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.total) }} €</td>
+                    <td>{{ "%.2f"|format(order.total) }} €</td>
                 </tr>
             </table>
         </div>
         <div style="clear: both;"></div>
 
-        <!-- Anmerkungen -->
+        <!-- Notes -->
         <div class="section notes text-neutral-700">
             <p class="bold text-main">Notes</p>
             <p class="italic">Thank you for your order!</p>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer Block (Stays Fixed at Page Bottom) -->
     <div class="footer">
         <table class="footer-table">
             <tr>
@@ -372,7 +374,11 @@
                 </td>
             </tr>
         </table>
-        <div class="page-counter">Seite 1 von 1</div>
+        
+        <!-- Automated Page Counter Context (For Prince/Weasyprint Engine Support) -->
+        <div class="page-counter">
+            <span class="page-num"></span>
+        </div>
     </div>
 </body>
 </html>
