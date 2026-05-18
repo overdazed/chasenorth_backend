@@ -16,8 +16,7 @@
             font-family: Arial, Helvetica, sans-serif;
             font-size: 14px;
             margin: 0;
-            padding: 20px;
-            padding-bottom: 120px; /* reserve space for footer on every page */
+            padding: 0;
         }
         .address p {
             margin: 0;
@@ -28,7 +27,7 @@
             margin-bottom: 30px;
         }
         .container {
-            width: 700px;
+            width: 100%;
         }
         .header-table {
             width: 100%;
@@ -42,7 +41,6 @@
             height: 48px;
         }
         
-        /* Kontakt-Info oben rechts (Bild 1 Stil) */
         .header-contact-small {
             font-size: 10px;
             text-align: right;
@@ -129,9 +127,8 @@
             background-color: #5c6ac4;
         }
         
-        /* Notes Bereich ohne Gap */
         .notes {
-            margin-top: 10px;
+            margin-top: 20px;
         }
         .notes p {
             margin: 0 !important;
@@ -139,18 +136,18 @@
             line-height: 1.2;
         }
 
+        /* Fixed footer layout for automated A4 PDF engines */
         .footer {
             position: fixed;
-            bottom: 0;
+            bottom: -25mm; /* Moves footer perfectly into the @page margin area */
             left: 0;
             right: 0;
             height: 26mm;
             border-top: 1px solid #000;
-            padding: 6px 15mm 4px 15mm;
+            padding-top: 8px;
             font-size: 10px;
             color: #333;
             background-color: white;
-            z-index: 1000;
         }
         .footer-table {
             width: 100%;
@@ -159,7 +156,7 @@
         }
         .footer-table td {
             vertical-align: top;
-            line-height: 0.5;
+            line-height: 1.4;
             padding: 0;
         }
         .footer-center {
@@ -314,7 +311,7 @@
             </tbody>
         </table>
 
-        <!-- Gesamtsummen (Jetzt mit Discount & Shipping im sauberen Stil) -->
+        <!-- Gesamtsummen -->
         <div class="totals-wrapper">
             <table class="totals-table">
                 <tr>
@@ -359,19 +356,16 @@
         <table class="footer-table">
             <tr>
                 <td>
-                    <br>
                     <strong>{{ company_name }}</strong><br>
                     {{ company_address }}<br>
                     {{ company_zip }} {{ company_city }}
                 </td>
                 <td class="footer-center">
-                    <br>
                     USt-IdNr.: {{ company_vat }}<br>
                     Steuernummer: {{ company_steuernummer }}<br>
                     Inhaber: {{ company_contact_name }}
                 </td>
                 <td class="footer-right">
-                    <br>
                     <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
                     IBAN: {{ company_iban }}<br>
                     BIC: {{ company_bic }}
