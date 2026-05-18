@@ -250,27 +250,27 @@
                         <p>{{ company_country }}</p>
                     </td>
                     <td width="350" class="text-right text-neutral-600 address">
-                        {% if order.shippingAddress and order.shippingAddress.firstName and order.shippingAddress.lastName %}
+                        {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
                         <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
                         {% endif %}
-                         {% if order.shippingAddress and order.shippingAddress.company %}
-                         <p>{{ order.shippingAddress.company }}</p>
-                         {% endif %}
-                         {% if order.shippingAddress and order.shippingAddress.address %}
-                         <p>{{ order.shippingAddress.address }}</p>
-                         {% endif %}
-                         {% if order.shippingAddress and order.shippingAddress.address2 %}
-                         <p>{{ order.shippingAddress.address2 }}</p>
-                         {% endif %}
-                         {% if order.shippingAddress and order.shippingAddress.postalCode and order.shippingAddress.city %}
-                         <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
-                         {% endif %}
-                         {% if order.shippingAddress and order.shippingAddress.state %}
-                         <p>{{ order.shippingAddress.state }}</p>
-                         {% endif %}
-                         {% if order.shippingAddress and order.shippingAddress.country %}
-                         <p>{{ order.shippingAddress.country }}</p>
-                         {% endif %}
+                        {% if order.shippingAddress.company %}
+                        <p>{{ order.shippingAddress.company }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.address %}
+                        <p>{{ order.shippingAddress.address }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.address2 %}
+                        <p>{{ order.shippingAddress.address2 }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
+                        <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.state %}
+                        <p>{{ order.shippingAddress.state }}</p>
+                        {% endif %}
+                        {% if order.shippingAddress.country %}
+                        <p>{{ order.shippingAddress.country }}</p>
+                        {% endif %}
                     </td>
                 </tr>
             </table>
