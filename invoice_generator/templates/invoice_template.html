@@ -38,17 +38,6 @@
             vertical-align: top;
             padding: 0;
         }
-        /* Kontakt-Info oben rechts (Bild 1 Stil) */
-        .header-contact-small {
-            font-size: 10px; /* Schön klein wie im Bild */
-            text-align: right;
-            line-height: 1.3;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .header-contact-small strong {
-            font-size: 11px;
-        }
         .logo {
             height: 48px;
         }
@@ -245,18 +234,6 @@
                         class="logo" alt="Brand Logo" />
                 </td>
                 <td class="text-right">
-                    <div class="header-contact-small">
-                        <strong>{{ company_name }}</strong><br>
-                        {{ company_address }}<br>
-                        {{ company_zip }} {{ company_city }}<br>
-                        <br>
-                        Telefon: {{ company_phone or '0234 / 500 60 10' }}<br>
-                        Telefax: {{ company_fax or '0234 / 500 60 11' }}<br>
-                        <br>
-                        E-Mail: {{ company_email or 'info@muellertest.de' }}<br>
-                        Web: {{ company_website or 'www.muellertest.de' }}
-                    </div>
-
                     <table class="info-table">
                         <tr>
                             <td class="border-r">
@@ -275,43 +252,39 @@
             </tr>
         </table>
 
-        <!-- Billing Address -->
+        <!-- Sender + Customer Address -->
         <div class="bg-slate-100 address-block">
-            <table class="header-table">
-                <tr>
-                    <td width="350" class="text-neutral-600 address">
-                        <p class="bold text-main">{{ company_name }}</p>
-                        <p>USt-ID-Nr.: {{ company_vat }}</p>
-                        <p>{{ company_contact_name }}</p>
-                        <p>{{ company_address }}</p>
-                        <p>{{ company_zip }} {{ company_city }}</p>
-                        <p>{{ company_country }}</p>
-                    </td>
-                    <td width="350" class="text-right text-neutral-600 address">
-                        {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
-                        <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.company %}
-                        <p>{{ order.shippingAddress.company }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.address %}
-                        <p>{{ order.shippingAddress.address }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.address2 %}
-                        <p>{{ order.shippingAddress.address2 }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
-                        <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.state %}
-                        <p>{{ order.shippingAddress.state }}</p>
-                        {% endif %}
-                        {% if order.shippingAddress.country %}
-                        <p>{{ order.shippingAddress.country }}</p>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
+            <!-- Company Header -->
+            <div style="margin-bottom: 12px;">
+                <p class="bold text-main">{{ company_name }}</p>
+                <p>{{ company_address }}</p>
+                <p>{{ company_zip }} {{ company_city }}, {{ company_country }}</p>
+            </div>
+
+            <!-- Customer Address -->
+            <div>
+                {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
+                <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
+                {% endif %}
+                {% if order.shippingAddress.company %}
+                <p>{{ order.shippingAddress.company }}</p>
+                {% endif %}
+                {% if order.shippingAddress.address %}
+                <p>{{ order.shippingAddress.address }}</p>
+                {% endif %}
+                {% if order.shippingAddress.address2 %}
+                <p>{{ order.shippingAddress.address2 }}</p>
+                {% endif %}
+                {% if order.shippingAddress.postalCode and order.shippingAddress.city %}
+                <p>{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}</p>
+                {% endif %}
+                {% if order.shippingAddress.state %}
+                <p>{{ order.shippingAddress.state }}</p>
+                {% endif %}
+                {% if order.shippingAddress.country %}
+                <p>{{ order.shippingAddress.country }}</p>
+                {% endif %}
+            </div>
         </div>
 
         <!-- Items Table -->
