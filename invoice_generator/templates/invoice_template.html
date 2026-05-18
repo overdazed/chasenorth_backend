@@ -147,27 +147,28 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 22mm;
+            height: 18mm;
             border-top: 1px solid #e5e7eb;
-            padding: 4mm 20px;
+            padding: 5mm 20px;
             font-size: 10px;
             color: #6b7280;
             background-color: white;
             z-index: 1000;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
+            align-items: center;
+            line-height: 1.4;
         }
-        .footer-column {
+        .footer-left {
             flex: 1;
             text-align: left;
-            line-height: 1.3;
         }
-        .footer-column.center {
+        .footer-center {
+            flex: 1;
             text-align: center;
         }
-        .footer-column.right {
+        .footer-right {
+            flex: 1;
             text-align: right;
         }
         .bold {
@@ -370,23 +371,16 @@
 
     <!-- Footer -->
     <div class="footer">
-        <div class="footer-column">
-            <strong>{{ company_name }}</strong><br>
-            {{ company_address }}<br>
-            {{ company_zip }} {{ company_city }}, {{ company_country }}
+        <div class="footer-left">
+            <strong>{{ company_name }}</strong> | {{ company_address }}, {{ company_zip }} {{ company_city }}, {{ company_country }}
         </div>
         
-        <div class="footer-column center">
-            USt-IdNr.: <br>
-            Steuernummer: <br>
-            Inhaber: Svetlana Pantschenko
+        <div class="footer-center">
+            USt-IdNr.:  | Steuernummer:  | Inhaber: Svetlana Pantschenko
         </div>
         
-        <div class="footer-column right">
-            <strong>Bankverbindung</strong><br>
-            Bank: <br>
-            IBAN: <br>
-            BIC: 
+        <div class="footer-right">
+            <strong>Bank:</strong>  | <strong>IBAN:</strong>  | <strong>BIC:</strong> 
         </div>
     </div>
 </body>
