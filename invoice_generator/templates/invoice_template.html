@@ -147,14 +147,28 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 18mm;
+            height: 22mm;
             border-top: 1px solid #e5e7eb;
-            padding: 6mm 20px 4mm;
-            text-align: center;
-            font-size: 11px;
+            padding: 4mm 20px;
+            font-size: 10px;
             color: #6b7280;
             background-color: white;
             z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .footer-column {
+            flex: 1;
+            text-align: left;
+            line-height: 1.3;
+        }
+        .footer-column.center {
+            text-align: center;
+        }
+        .footer-column.right {
+            text-align: right;
         }
         .bold {
             font-weight: bold;
@@ -356,7 +370,24 @@
 
     <!-- Footer -->
     <div class="footer">
-        <p>{{ company_name }} | {{ company_address }}, {{ company_zip }} {{ company_city }}, {{ company_country }} | {{ company_email }} | {{ company_phone }}</p>
+        <div class="footer-column">
+            <strong>{{ company_name }}</strong><br>
+            {{ company_address }}<br>
+            {{ company_zip }} {{ company_city }}, {{ company_country }}
+        </div>
+        
+        <div class="footer-column center">
+            USt-IdNr.: <br>
+            Steuernummer: <br>
+            Inhaber: Svetlana Pantschenko
+        </div>
+        
+        <div class="footer-column right">
+            <strong>Bankverbindung</strong><br>
+            Bank: <br>
+            IBAN: <br>
+            BIC: 
+        </div>
     </div>
 </body>
 </html>
