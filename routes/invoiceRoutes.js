@@ -29,6 +29,7 @@ router.post('/generate', protect, async (req, res) => {
 
         // In invoiceRoutes.js, update the orderData preparation:
         const orderItems = order.orderItems || [];
+        
         const orderData = {
             items: orderItems.map(item => ({
                 name: item.name,
