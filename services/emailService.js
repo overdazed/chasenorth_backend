@@ -1,34 +1,10 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const path = require('path');
 const fs = require('fs').promises;
-const { promisify } = require('util');
 const { compile } = require('handlebars');
-const dns = require('dns');
 
-console.log('SMTP Config:', {
-    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-    port: process.env.SMTP_PORT || 465,
-    secure: process.env.SMTP_SECURE,
-    user: process.env.SYSTEM_EMAIL
-});
-
-// Create a transporter object using the default SMTP transport
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    lookup: (hostname, options, cb) => dns.lookup(hostname, { family: 4 }, cb),
-    connectionTimeout: 10000,
-    greetingTimeout: 5000,
-    socketTimeout: 10000,
-    auth: {
-        user: process.env.SYSTEM_EMAIL,
-        pass: process.env.SYSTEM_PASS
-    },
-    debug: true,
-    logger: true
-});
+// Resend client (EU region)
+const resend = new Resend(process.env.RESEND_API_KEY, { region: 'eu-west-1' });
 
 // Compile email template
 const compileTemplate = async (templateName, data) => {
@@ -113,14 +89,14 @@ ${emailData.attachments && emailData.attachments.length > 0 ?
 }`
         };
 
-        // Send both emails
+        // Send both emails via Resend
         const [customerInfo, supportInfo] = await Promise.all([
-            transporter.sendMail(customerEmail),
-            transporter.sendMail(supportEmail)
+            resend.emails.send(customerEmail),
+            resend.emails.send(supportEmail)
         ]);
 
-        console.log('Confirmation email sent:', customerInfo.messageId);
-        console.log('Support notification sent:', supportInfo.messageId);
+        console.log('Confirmation email sent:', customerInfo.id);
+        console.log('Support notification sent:', supportInfo.id);
         return { customerInfo, supportInfo };
     } catch (error) {
         console.error('Error sending email:', error);
@@ -135,16 +111,14 @@ const sendEmailVerification = async (email, verificationLink) => {
             email: email
         });
 
-        const emailOptions = {
-            from: `"ChaseNorth Support" <${process.env.SYSTEM_EMAIL}>`,
+        const info = await resend.emails.send({
+            from: `ChaseNorth Support <${process.env.SYSTEM_EMAIL}>`,
             to: email,
             subject: 'Verify Your Email Address',
             html: html,
             text: `Please verify your new email address by clicking the following link: ${verificationLink}`
-        };
-
-        const info = await transporter.sendMail(emailOptions);
-        console.log('Email verification sent:', info.messageId);
+        });
+        console.log('Email verification sent:', info.id);
         return info;
     } catch (error) {
         console.error('Error sending verification email:', error);
