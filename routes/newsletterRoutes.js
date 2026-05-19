@@ -9,7 +9,7 @@ const path = require('path');
 
 // Email transporter setupp (using Gmail as an example)
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
     port: 587,
     secure: false,
     requireTLS: true,

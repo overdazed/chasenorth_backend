@@ -6,7 +6,7 @@ const { compile } = require('handlebars');
 
 console.log('SMTP Config:', {
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-    port: process.env.SMTP_PORT,
+    port: process.env.SMTP_PORT || 465,
     secure: process.env.SMTP_SECURE,
     user: process.env.SYSTEM_EMAIL
 });
