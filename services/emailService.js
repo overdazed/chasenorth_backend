@@ -14,13 +14,14 @@ console.log('SMTP Config:', {
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-    port: parseInt(process.env.SMTP_PORT) || 587,
-    secure: false,
-    requireTLS: true,
+    port:  process.env.SMTP_PORT,
+    secure: true,
     auth: {
         user: process.env.SYSTEM_EMAIL,
         pass: process.env.SYSTEM_PASS
-    }
+    },
+    debug: true, // Enable debug output
+    logger: true // Log to console
 });
 
 // Compile email template
@@ -131,7 +132,7 @@ const sendEmailVerification = async (email, verificationLink) => {
         const emailOptions = {
             from: `"ChaseNorth Support" <${process.env.SYSTEM_EMAIL}>`,
             to: email,
-            subject: 'Verify Your New Email Address',
+            subject: 'Verify Your Email Address',
             html: html,
             text: `Please verify your new email address by clicking the following link: ${verificationLink}`
         };
