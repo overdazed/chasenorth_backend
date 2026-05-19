@@ -16,12 +16,13 @@ const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
     port:  process.env.SMTP_PORT,
     secure: true,
+    family: 4,
     auth: {
         user: process.env.SYSTEM_EMAIL,
         pass: process.env.SYSTEM_PASS
     },
-    debug: true, // Enable debug output
-    logger: true // Log to console
+    debug: true,
+    logger: true
 });
 
 // Compile email template

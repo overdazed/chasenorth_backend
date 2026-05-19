@@ -12,8 +12,9 @@ const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
     secure: process.env.SMTP_SECURE,
+    family: 4,
     auth: {
-        user: process.env.EMAIL_USER, // e.g. newsletter@yourdomain.com
+        user: process.env.EMAIL_USER, // e.g. newsletter@chasenorth.com
         pass: process.env.EMAIL_PASS  // mailbox password
     }
 });
