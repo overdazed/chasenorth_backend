@@ -7,8 +7,8 @@
     <style>
         @page {
             size: A4;
-            /* Expanded bottom margin to 45mm to create a perfect blank zone for the footer */
-            margin: 20mm 15mm 45mm 15mm; 
+            /* Bottom margin set to 35mm to leave an explicit protection zone for the footer */
+            margin: 20mm 15mm 35mm 15mm; 
         }
         * {
             box-sizing: border-box;
@@ -127,17 +127,17 @@
             line-height: 1.2;
         }
 
-        /* FIXED FOOTER: Optimized specifically for clean PDF rendering.
-           Uses standard bottom spacing and a thin rule matching the reference sample.
+        /* FIXED FOOTER: Pushed into the absolute bottom margin space.
+           This positions it close to the physical edge of the A4 page without text compression.
         */
         .footer {
             position: fixed;
-            bottom: 0; 
+            bottom: -23mm; 
             left: 0;
             right: 0;
-            height: 30mm;
-            border-top: 1px solid #ccc;
-            padding-top: 12px;
+            height: 22mm;
+            border-top: 1px solid #d1d5db;
+            padding-top: 10px;
             font-size: 10px;
             color: #4b5563;
             background-color: white;
@@ -148,10 +148,10 @@
             table-layout: fixed;
         }
         .footer-table td {
-            width: 33.33%; /* Forces clean, distinct columns like the sample image */
+            width: 25%; /* 4-column split matching example image layout */
             vertical-align: top;
-            line-height: 1.5; /* Fixes vertical text overlap bug */
-            padding-right: 15px;
+            line-height: 1.5;
+            padding-right: 10px;
             text-align: left;
         }
         .footer-table td:last-child {
@@ -160,7 +160,7 @@
         
         .page-counter {
             text-align: center;
-            margin-top: 12px;
+            margin-top: 10px;
             font-size: 9px;
             color: #9ca3af;
             width: 100%;
@@ -353,9 +353,14 @@
                     {{ company_zip }} {{ company_city }}
                 </td>
                 <td>
-                    USt-IdNr.: {{ company_vat }}<br>
+                    Tel: {{ company_phone or '-' }}<br>
+                    Fax: {{ company_fax or '-' }}<br>
+                    Email: {{ company_email or '-' }}
+                </td>
+                <td>
+                    Inhaber: {{ company_contact_name }}<br>
                     Steuernummer: {{ company_steuernummer }}<br>
-                    Inhaber: {{ company_contact_name }}
+                    USt-IdNr.: {{ company_vat }}
                 </td>
                 <td>
                     <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
