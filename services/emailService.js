@@ -14,14 +14,13 @@ console.log('SMTP Config:', {
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-    port:  process.env.SMTP_PORT,
-    secure: true,
+    port: parseInt(process.env.SMTP_PORT) || 587,
+    secure: false,
+    requireTLS: true,
     auth: {
         user: process.env.SYSTEM_EMAIL,
         pass: process.env.SYSTEM_PASS
-    },
-    debug: true, // Enable debug output
-    logger: true // Log to console
+    }
 });
 
 // Compile email template
