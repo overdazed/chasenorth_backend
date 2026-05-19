@@ -8,22 +8,16 @@
         @page {
             size: A4;
             /* Creates a precise 30mm blank print zone at the bottom of the page */
-            margin: 20mm 15mm 0mm 15mm; 
+            margin: 20mm 15mm 30mm 15mm; 
         }
         * {
             box-sizing: border-box;
-        }
-        html, body {
-            height: 100%;
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 14px;
             margin: 0;
             padding: 0;
-            /* This padding creates the safety zone for your text, replacing the old page margin */
-            padding-bottom: 40mm; 
-            position: relative;
         }
         .address p {
             margin: 0;
@@ -136,10 +130,10 @@
         /* ABSOLUTE BOTTOM FIX: Calibrated specifically to sit flush at the paper edge */
         .footer {
             position: fixed;
-            bottom: 0; /* Drags the container down into the very bottom margin edge */
-            left: 15mm;
-            right: 15mm;
-            height: 25mm;  /* Compact height to prevent inner floating gaps */
+            bottom: -27mm; /* Drags the container down into the very bottom margin edge */
+            left: 0;
+            right: 0;
+            height: 18mm;  /* Compact height to prevent inner floating gaps */
             border-top: 1px solid #babcbe; /* Sleek structural divider rule */
             padding-top: 6px;
             font-size: 9.5px;
@@ -242,7 +236,7 @@
         <div class="bg-slate-100 address-block">
             <table class="header-table">
                 <tr>
-                    <td style="width: 350px;" class="text-neutral-600 address">
+                    <td width="350" class="text-neutral-600 address">
                         <p class="bold text-main">{{ company_name }}</p>
                         <p>USt-ID-Nr.: {{ company_vat }}</p>
                         <p>{{ company_contact_name }}</p>
@@ -250,7 +244,7 @@
                         <p>{{ company_zip }} {{ company_city }}</p>
                         <p>{{ company_country }}</p>
                     </td>
-                    <td style="width: 350px;" class="text-right text-neutral-600 address">
+                    <td width="350" class="text-right text-neutral-600 address">
                         {% if order.shippingAddress.firstName and order.shippingAddress.lastName %}
                         <p class="bold">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
                         {% endif %}
