@@ -29,15 +29,11 @@ class InvoiceService {
         const tempFile = path.join(os.tmpdir(), `invoice_${uuidv4()}.json`);
 
         try {
-            // Convert Mongoose document to plain object if needed
-            const order = orderData && typeof orderData.toObject === 'function' 
-                ? orderData.toObject() 
-                : orderData;
 
             // Prepare the data to send to Python script
             const data = {
                 order_data: {
-                    ...order,
+                    ...orderData,
                     // Only include invoiceNumber if it's a valid format
                     invoiceNumber: (invoiceNumber && invoiceNumber.startsWith('INV-')) ? invoiceNumber : null
                 },
