@@ -7,8 +7,8 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
-// Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Resend client (EU region for GDPR)
+const resend = new Resend(process.env.RESEND_API_KEY, { region: 'eu-west-1' });
 
 // Get a random discount code from environment variables
 function getRandomDiscountCode() {
