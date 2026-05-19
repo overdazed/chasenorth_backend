@@ -101,11 +101,9 @@ router.post('/generate', protect, async (req, res) => {
             order.invoiceNumber
         );
 
-        // Only set invoiceNumber if the order doesn't already have a valid one
-        if (!order.invoiceNumber || !order.invoiceNumber.startsWith('INV-')) {
-            order.invoiceNumber = invoiceNumber;
-            await order.save();
-        }
+        // Always update the order with the new invoice number
+        order.invoiceNumber = invoiceNumber;
+        await order.save();
 
         // Update order with invoice number if not already set
         // if (!order.invoiceNumber) {
