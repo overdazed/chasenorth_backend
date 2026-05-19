@@ -68,23 +68,20 @@ router.post('/subscribe', async (req, res) => {
         });
         await subscription.save();
 
-        // Send email
-        const mailOptions = {
-            from: '"ChaseNorth" <compass@chasenorth.com>',
-            to: email,
-            subject: 'Setz deinen Kompass 🧭',
-            html: emailTemplate
-        };
+        // Send email (non-blocking - do not fail subscription if email fails)
+        try {
+            const mailOptions = {
+                from: '"ChaseNorth" <compass@chasenorth.com>',
+                to: email,
+                subject: 'Setz deinen Kompass 🧭',
+                html: emailTemplate
+            };
+            await transporter.sendMail(mailOptions);
+        } catch (emailError) {
+            console.error('Newsletter email failed (subscription saved):', emailError.message);
+        }
 
-        await transporter.sendMail(mailOptions);
-
-        // Here you would typically save the email and code to your database
-        // await saveToDatabase(email, discountCode);
-
-        res.json({
-            success: true,
-            // message: 'Subscription successful'
-        });
+        res.json({ success: true });
 
     } catch (error) {
         console.error('Error processing subscription:', error);
