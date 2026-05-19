@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,8 @@
     <style>
         @page {
             size: A4;
-            /* Balanced printable area margins */
-            margin: 20mm 15mm 25mm 15mm; 
+            /* Der minimale untere Rand schiebt die Basis-Linie ganz nach unten */
+            margin: 20mm 15mm 10mm 15mm; 
         }
         * {
             box-sizing: border-box;
@@ -27,9 +27,13 @@
             margin-top: 60px;
             margin-bottom: 30px;
         }
+        
+        /* SCHLÜSSEL-EFFEKT: Schützt den Inhalt vor dem Überlappen mit dem Footer */
         .container {
             width: 100%;
+            padding-bottom: 35mm; 
         }
+        
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -127,16 +131,16 @@
             line-height: 1.2;
         }
 
-        /* FIXED FOOTER STYLE: Positioned safely relative to the page template */
+        /* FIX: Sitzt stabil am unteren Rand der erlaubten Page-Zone */
         .footer {
             position: fixed;
-            bottom: -18mm; /* Pushes the layout down inside the 25mm page margin */
+            bottom: 0; 
             left: 0;
             right: 0;
-            height: 18mm;  
+            height: 22mm;  
             border-top: 1px solid #babcbe; 
-            padding-top: 8px;
-            font-size: 9.5px;
+            padding-top: 6px;
+            font-size: 9px;
             color: #4b5563;
             background-color: white;
         }
@@ -158,8 +162,8 @@
         
         .page-counter {
             text-align: center;
-            margin-top: 4px;
-            font-size: 8.5px;
+            margin-top: 5px;
+            font-size: 8px;
             color: #9ca3af;
             width: 100%;
         }
@@ -207,34 +211,6 @@
     </style>
 </head>
 <body>
-
-    <div id="footer" class="footer">
-        <table class="footer-table">
-            <tr>
-                <td>
-                    <strong>{{ company_name }}</strong><br>
-                    {{ company_address }}<br>
-                    {{ company_zip }} {{ company_city }}
-                </td>
-                <td>
-                    Tel: {{ company_phone or '-' }}<br>
-                    Fax: {{ company_fax or '-' }}<br>
-                    Email: {{ company_email or '-' }}
-                </td>
-                <td>
-                    Inhaber: {{ company_contact_name }}<br>
-                    Steuernummer: {{ company_steuernummer }}<br>
-                    USt-IdNr.: {{ company_vat }}
-                </td>
-                <td>
-                    <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
-                    IBAN: {{ company_iban }}<br>
-                    BIC: {{ company_bic }}
-                </td>
-            </tr>
-        </table>
-        <div class="page-counter"></div>
-    </div>
 
     <div class="container">
         <table class="header-table">
@@ -370,5 +346,34 @@
             <p class="italic">Thank you for your order!</p>
         </div>
     </div>
+
+    <div id="footer" class="footer">
+        <table class="footer-table">
+            <tr>
+                <td>
+                    <strong>{{ company_name }}</strong><br>
+                    {{ company_address }}<br>
+                    {{ company_zip }} {{ company_city }}
+                </td>
+                <td>
+                    Tel: {{ company_phone or '-' }}<br>
+                    Fax: {{ company_fax or '-' }}<br>
+                    Email: {{ company_email or '-' }}
+                </td>
+                <td>
+                    Inhaber: {{ company_contact_name }}<br>
+                    Steuernummer: {{ company_steuernummer }}<br>
+                    USt-IdNr.: {{ company_vat }}
+                </td>
+                <td>
+                    <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
+                    IBAN: {{ company_iban }}<br>
+                    BIC: {{ company_bic }}
+                </td>
+            </tr>
+        </table>
+        <div class="page-counter"></div>
+    </div>
+
 </body>
 </html>
