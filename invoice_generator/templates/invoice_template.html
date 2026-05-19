@@ -1,3 +1,13 @@
+To fix the footer appearing at the top of the page and to prevent it from overlapping with your line items on multi-page invoices, two main adjustments are required:
+
+Move the Footer HTML to the Bottom: In many modern PDF generation engines (such as Puppeteer, headless Chrome, or wkhtmltopdf), placing a position: fixed element at the top of the HTML causes it to render incorrectly at the top coordinates. Moving it to the very end of the <body> resolves this.
+
+Increase the @page Bottom Margin: Your footer is 22mm high, but the @page bottom margin was only set to 10mm. This forces the content to print over the footer. Increasing the page's bottom margin to 32mm creates a dedicated blank safety zone at the bottom of every page where the footer can sit cleanly without overlapping any text.
+
+Here is your fully updated, ready-to-use template code:
+
+HTML
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -7,8 +17,8 @@
     <style>
         @page {
             size: A4;
-            /* 10mm bottom margin allows the footer area to sit close to the physical edge */
-            margin: 20mm 15mm 10mm 15mm; 
+            /* Increased bottom margin to 32mm to reserve space for the 22mm footer */
+            margin: 20mm 15mm 32mm 15mm; 
         }
         * {
             box-sizing: border-box;
@@ -28,10 +38,8 @@
             margin-bottom: 30px;
         }
         
-        /* Prevents the invoice contents from overlapping into the fixed footer area */
         .container {
             width: 100%;
-            padding-bottom: 30mm; 
         }
         
         .header-table {
@@ -131,10 +139,10 @@
             line-height: 1.2;
         }
 
-        /* FIXED POSITION FIX: Must use exactly bottom: 0 with NO negative values */
+        /* FIXED POSITION FOOTER: Placed relative to the printable page boundaries */
         .footer {
             position: fixed;
-            bottom: 0; 
+            bottom: -20mm; /* Sits perfectly within the 32mm page bottom margin zone */
             left: 0;
             right: 0;
             height: 22mm;  
@@ -211,34 +219,6 @@
     </style>
 </head>
 <body>
-
-    <div id="footer" class="footer">
-        <table class="footer-table">
-            <tr>
-                <td>
-                    <strong>{{ company_name }}</strong><br>
-                    {{ company_address }}<br>
-                    {{ company_zip }} {{ company_city }}
-                </td>
-                <td>
-                    Tel: {{ company_phone or '-' }}<br>
-                    Fax: {{ company_fax or '-' }}<br>
-                    Email: {{ company_email or '-' }}
-                </td>
-                <td>
-                    Inhaber: {{ company_contact_name }}<br>
-                    Steuernummer: {{ company_steuernummer }}<br>
-                    USt-IdNr.: {{ company_vat }}
-                </td>
-                <td>
-                    <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
-                    IBAN: {{ company_iban }}<br>
-                    BIC: {{ company_bic }}
-                </td>
-            </tr>
-        </table>
-        <div class="page-counter"></div>
-    </div>
 
     <div class="container">
         <table class="header-table">
@@ -373,6 +353,34 @@
             <p class="bold text-main">Notes</p>
             <p class="italic">Thank you for your order!</p>
         </div>
+    </div>
+
+    <div id="footer" class="footer">
+        <table class="footer-table">
+            <tr>
+                <td>
+                    <strong>{{ company_name }}</strong><br>
+                    {{ company_address }}<br>
+                    {{ company_zip }} {{ company_city }}
+                </td>
+                <td>
+                    Tel: {{ company_phone or '-' }}<br>
+                    Fax: {{ company_fax or '-' }}<br>
+                    Email: {{ company_email or '-' }}
+                </td>
+                <td>
+                    Inhaber: {{ company_contact_name }}<br>
+                    Steuernummer: {{ company_steuernummer }}<br>
+                    USt-IdNr.: {{ company_vat }}
+                </td>
+                <td>
+                    <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
+                    IBAN: {{ company_iban }}<br>
+                    BIC: {{ company_bic }}
+                </td>
+            </tr>
+        </table>
+        <div class="page-counter"></div>
     </div>
 
 </body>
