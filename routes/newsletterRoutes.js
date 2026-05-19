@@ -1,28 +1,14 @@
 // In your server.js or routes/newsletter.js
 const express = require('express');
 const router = express.Router();
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const Subscription = require('../models/Subscription');
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const dns = require('dns');
 
-// Email transporter setupp (using Gmail as an example)
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    lookup: (hostname, options, cb) => dns.lookup(hostname, { family: 4 }, cb),
-    connectionTimeout: 10000,
-    greetingTimeout: 5000,
-    socketTimeout: 10000,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+// Resend client
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Get a random discount code from environment variables
 function getRandomDiscountCode() {
@@ -68,15 +54,14 @@ router.post('/subscribe', async (req, res) => {
         });
         await subscription.save();
 
-        // Send email (non-blocking - do not fail subscription if email fails)
+        // Send email via Resend (non-blocking)
         try {
-            const mailOptions = {
-                from: '"ChaseNorth" <compass@chasenorth.com>',
+            await resend.emails.send({
+                from: 'ChaseNorth <compass@chasenorth.com>',
                 to: email,
                 subject: 'Setz deinen Kompass 🧭',
                 html: emailTemplate
-            };
-            await transporter.sendMail(mailOptions);
+            });
         } catch (emailError) {
             console.error('Newsletter email failed (subscription saved):', emailError.message);
         }
