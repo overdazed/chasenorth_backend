@@ -7,8 +7,8 @@
     <style>
         @page {
             size: A4;
-            /* Creates a precise 30mm blank print zone at the bottom of the page */
-            margin: 20mm 15mm 30mm 15mm; 
+            /* Balanced printable area margins */
+            margin: 20mm 15mm 25mm 15mm; 
         }
         * {
             box-sizing: border-box;
@@ -127,15 +127,15 @@
             line-height: 1.2;
         }
 
-        /* ABSOLUTE BOTTOM FIX: Calibrated specifically to sit flush at the paper edge */
+        /* FIXED FOOTER STYLE: Positioned safely relative to the page template */
         .footer {
             position: fixed;
-            bottom: -27mm; /* Drags the container down into the very bottom margin edge */
+            bottom: -18mm; /* Pushes the layout down inside the 25mm page margin */
             left: 0;
             right: 0;
-            height: 18mm;  /* Compact height to prevent inner floating gaps */
-            border-top: 1px solid #babcbe; /* Sleek structural divider rule */
-            padding-top: 6px;
+            height: 18mm;  
+            border-top: 1px solid #babcbe; 
+            padding-top: 8px;
             font-size: 9.5px;
             color: #4b5563;
             background-color: white;
@@ -148,7 +148,7 @@
         .footer-table td {
             width: 25%; 
             vertical-align: top;
-            line-height: 1.35;
+            line-height: 1.4;
             padding-right: 10px;
             text-align: left;
         }
@@ -207,6 +207,35 @@
     </style>
 </head>
 <body>
+
+    <div id="footer" class="footer">
+        <table class="footer-table">
+            <tr>
+                <td>
+                    <strong>{{ company_name }}</strong><br>
+                    {{ company_address }}<br>
+                    {{ company_zip }} {{ company_city }}
+                </td>
+                <td>
+                    Tel: {{ company_phone or '-' }}<br>
+                    Fax: {{ company_fax or '-' }}<br>
+                    Email: {{ company_email or '-' }}
+                </td>
+                <td>
+                    Inhaber: {{ company_contact_name }}<br>
+                    Steuernummer: {{ company_steuernummer }}<br>
+                    USt-IdNr.: {{ company_vat }}
+                </td>
+                <td>
+                    <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
+                    IBAN: {{ company_iban }}<br>
+                    BIC: {{ company_bic }}
+                </td>
+            </tr>
+        </table>
+        <div class="page-counter"></div>
+    </div>
+
     <div class="container">
         <table class="header-table">
             <tr>
@@ -340,34 +369,6 @@
             <p class="bold text-main">Notes</p>
             <p class="italic">Thank you for your order!</p>
         </div>
-    </div>
-
-    <div id="footer" class="footer">
-        <table class="footer-table">
-            <tr>
-                <td>
-                    <strong>{{ company_name }}</strong><br>
-                    {{ company_address }}<br>
-                    {{ company_zip }} {{ company_city }}
-                </td>
-                <td>
-                    Tel: {{ company_phone or '-' }}<br>
-                    Fax: {{ company_fax or '-' }}<br>
-                    Email: {{ company_email or '-' }}
-                </td>
-                <td>
-                    Inhaber: {{ company_contact_name }}<br>
-                    Steuernummer: {{ company_steuernummer }}<br>
-                    USt-IdNr.: {{ company_vat }}
-                </td>
-                <td>
-                    <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
-                    IBAN: {{ company_iban }}<br>
-                    BIC: {{ company_bic }}
-                </td>
-            </tr>
-        </table>
-        <div class="page-counter"></div>
     </div>
 </body>
 </html>
