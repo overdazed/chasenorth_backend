@@ -45,7 +45,7 @@ class InvoiceService {
 
             await writeFileAsync(tempFile, JSON.stringify(data), 'utf8');
 
-            // Try different Python executables until one works
+            // TTry different Python executables until one works
             let stdout = '';
             let stderr = '';
             let lastError = null;
