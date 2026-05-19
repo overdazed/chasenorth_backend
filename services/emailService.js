@@ -14,8 +14,9 @@ console.log('SMTP Config:', {
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-    port: parseInt(process.env.SMTP_PORT, 10) || 465,
-    secure: process.env.SMTP_SECURE === 'true',
+    port: 587,
+    secure: false,
+    requireTLS: true,
     family: 4,
     connectionTimeout: 10000,
     greetingTimeout: 5000,
