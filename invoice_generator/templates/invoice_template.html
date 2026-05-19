@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,8 @@
     <style>
         @page {
             size: A4;
-            /* Bottom margin set to 35mm to reserve space for the fixed footer */
-            margin: 20mm 15mm 35mm 15mm; 
+            /* Der minimale untere Rand schiebt die Basis-Linie ganz nach unten */
+            margin: 20mm 15mm 10mm 15mm; 
         }
         * {
             box-sizing: border-box;
@@ -27,9 +27,13 @@
             margin-top: 60px;
             margin-bottom: 30px;
         }
+        
+        /* SCHLÜSSEL-EFFEKT: Schützt den Inhalt vor dem Überlappen mit dem Footer */
         .container {
             width: 100%;
+            padding-bottom: 35mm; 
         }
+        
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -86,7 +90,6 @@
             text-align: center;
         }
         
-        /* Cleaned up layout structure for totals to prevent PDF engine bugs */
         .totals-wrapper {
             background: rgba(92, 106, 196, 0.05);
             width: 100%;
@@ -128,21 +131,17 @@
             line-height: 1.2;
         }
 
-        /* 
-           Fixed footer configuration. 
-           Using standard fixed positioning combined with a fixed height.
-           It sits neatly inside the 35mm space provided by the page margin.
-        */
+        /* FIX: Sitzt stabil am unteren Rand der erlaubten Page-Zone */
         .footer {
             position: fixed;
-            bottom: -25mm; 
+            bottom: 0; 
             left: 0;
             right: 0;
-            height: 25mm;
-            border-top: 1px solid #000;
-            padding-top: 15px;
-            font-size: 10px;
-            color: #333;
+            height: 22mm;  
+            border-top: 1px solid #babcbe; 
+            padding-top: 6px;
+            font-size: 9px;
+            color: #4b5563;
             background-color: white;
         }
         .footer-table {
@@ -151,21 +150,21 @@
             table-layout: fixed;
         }
         .footer-table td {
+            width: 25%; 
             vertical-align: top;
             line-height: 1.4;
-            padding: 0;
+            padding-right: 10px;
+            text-align: left;
         }
-        .footer-center {
-            text-align: center;
-        }
-        .footer-right {
-            text-align: right;
+        .footer-table td:last-child {
+            padding-right: 0;
         }
         
-        /* Dynamic page number configuration for compliant PDF engines */
         .page-counter {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 5px;
+            font-size: 8px;
+            color: #9ca3af;
             width: 100%;
         }
         .page-counter::after {
@@ -212,8 +211,8 @@
     </style>
 </head>
 <body>
+
     <div class="container">
-        <!-- Header -->
         <table class="header-table">
             <tr>
                 <td>
@@ -239,7 +238,6 @@
             </tr>
         </table>
 
-        <!-- Address block -->
         <div class="bg-slate-100 address-block">
             <table class="header-table">
                 <tr>
@@ -278,7 +276,6 @@
             </table>
         </div>
 
-        <!-- Articles Table -->
         <table class="items-table">
             <thead>
                 <tr>
@@ -313,7 +310,6 @@
             </tbody>
         </table>
 
-        <!-- Totals Wrapper -->
         <div class="totals-wrapper">
             <table class="totals-table">
                 <tr>
@@ -345,14 +341,12 @@
             </table>
         </div>
 
-        <!-- Notes Section -->
         <div class="notes text-neutral-700">
             <p class="bold text-main">Notes</p>
             <p class="italic">Thank you for your order!</p>
         </div>
     </div>
 
-    <!-- Fixed footer repeating structural block -->
     <div id="footer" class="footer">
         <table class="footer-table">
             <tr>
@@ -361,12 +355,17 @@
                     {{ company_address }}<br>
                     {{ company_zip }} {{ company_city }}
                 </td>
-                <td class="footer-center">
-                    USt-IdNr.: {{ company_vat }}<br>
-                    Steuernummer: {{ company_steuernummer }}<br>
-                    Inhaber: {{ company_contact_name }}
+                <td>
+                    Tel: {{ company_phone or '-' }}<br>
+                    Fax: {{ company_fax or '-' }}<br>
+                    Email: {{ company_email or '-' }}
                 </td>
-                <td class="footer-right">
+                <td>
+                    Inhaber: {{ company_contact_name }}<br>
+                    Steuernummer: {{ company_steuernummer }}<br>
+                    USt-IdNr.: {{ company_vat }}
+                </td>
+                <td>
                     <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
                     IBAN: {{ company_iban }}<br>
                     BIC: {{ company_bic }}
@@ -375,5 +374,6 @@
         </table>
         <div class="page-counter"></div>
     </div>
+
 </body>
 </html>
