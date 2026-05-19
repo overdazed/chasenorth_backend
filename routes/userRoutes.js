@@ -31,7 +31,18 @@ router.post('/register', async (req, res) => {
         // save the user to the database
         await user.save();
 
+        // Send verification email
+        const verificationToken = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+        const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
 
+        const { sendEmailVerification } = require('../services/emailService');
+        sendEmailVerification(user.email, verificationLink).catch(err =>
+            console.error('Failed to send verification email:', err)
+        );
 
         // we want to be able to send a token along with the user details
 
@@ -484,8 +495,9 @@ router.get('/verify-email', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if the email in token matches current user email
-        if (user.email !== decoded.newEmail) {
+        // Support both registration and email-change tokens
+        const expectedEmail = decoded.email || decoded.newEmail;
+        if (user.email !== expectedEmail) {
             return res.status(400).json({ message: 'Email verification token is invalid or expired' });
         }
 
