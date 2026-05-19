@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const { promisify } = require('util');
 const { compile } = require('handlebars');
+const dns = require('dns');
 
 console.log('SMTP Config:', {
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
@@ -17,7 +18,7 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false,
     requireTLS: true,
-    family: 4,
+    lookup: (hostname, options, cb) => dns.lookup(hostname, { family: 4 }, cb),
     connectionTimeout: 10000,
     greetingTimeout: 5000,
     socketTimeout: 10000,

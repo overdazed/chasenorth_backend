@@ -6,6 +6,7 @@ const Subscription = require('../models/Subscription');
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+const dns = require('dns');
 
 // Email transporter setupp (using Gmail as an example)
 const transporter = nodemailer.createTransport({
@@ -13,7 +14,7 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false,
     requireTLS: true,
-    family: 4,
+    lookup: (hostname, options, cb) => dns.lookup(hostname, { family: 4 }, cb),
     connectionTimeout: 10000,
     greetingTimeout: 5000,
     socketTimeout: 10000,
