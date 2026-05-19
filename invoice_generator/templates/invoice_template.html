@@ -7,8 +7,8 @@
     <style>
         @page {
             size: A4;
-            /* Bottom margin set to 35mm to reserve space for the fixed footer */
-            margin: 20mm 15mm 35mm 15mm; 
+            /* Expanded bottom margin to 45mm to create a perfect blank zone for the footer */
+            margin: 20mm 15mm 45mm 15mm; 
         }
         * {
             box-sizing: border-box;
@@ -86,7 +86,6 @@
             text-align: center;
         }
         
-        /* Cleaned up layout structure for totals to prevent PDF engine bugs */
         .totals-wrapper {
             background: rgba(92, 106, 196, 0.05);
             width: 100%;
@@ -128,21 +127,19 @@
             line-height: 1.2;
         }
 
-        /* 
-           Fixed footer configuration. 
-           Using standard fixed positioning combined with a fixed height.
-           It sits neatly inside the 35mm space provided by the page margin.
+        /* FIXED FOOTER: Optimized specifically for clean PDF rendering.
+           Uses standard bottom spacing and a thin rule matching the reference sample.
         */
         .footer {
             position: fixed;
-            bottom: -25mm; 
+            bottom: 0; 
             left: 0;
             right: 0;
-            height: 25mm;
-            border-top: 1px solid #000;
-            padding-top: 15px;
+            height: 30mm;
+            border-top: 1px solid #ccc;
+            padding-top: 12px;
             font-size: 10px;
-            color: #333;
+            color: #4b5563;
             background-color: white;
         }
         .footer-table {
@@ -151,21 +148,21 @@
             table-layout: fixed;
         }
         .footer-table td {
+            width: 33.33%; /* Forces clean, distinct columns like the sample image */
             vertical-align: top;
-            line-height: 1.4;
-            padding: 0;
+            line-height: 1.5; /* Fixes vertical text overlap bug */
+            padding-right: 15px;
+            text-align: left;
         }
-        .footer-center {
-            text-align: center;
-        }
-        .footer-right {
-            text-align: right;
+        .footer-table td:last-child {
+            padding-right: 0;
         }
         
-        /* Dynamic page number configuration for compliant PDF engines */
         .page-counter {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 12px;
+            font-size: 9px;
+            color: #9ca3af;
             width: 100%;
         }
         .page-counter::after {
@@ -213,7 +210,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <table class="header-table">
             <tr>
                 <td>
@@ -239,7 +235,6 @@
             </tr>
         </table>
 
-        <!-- Address block -->
         <div class="bg-slate-100 address-block">
             <table class="header-table">
                 <tr>
@@ -278,7 +273,6 @@
             </table>
         </div>
 
-        <!-- Articles Table -->
         <table class="items-table">
             <thead>
                 <tr>
@@ -313,7 +307,6 @@
             </tbody>
         </table>
 
-        <!-- Totals Wrapper -->
         <div class="totals-wrapper">
             <table class="totals-table">
                 <tr>
@@ -345,14 +338,12 @@
             </table>
         </div>
 
-        <!-- Notes Section -->
         <div class="notes text-neutral-700">
             <p class="bold text-main">Notes</p>
             <p class="italic">Thank you for your order!</p>
         </div>
     </div>
 
-    <!-- Fixed footer repeating structural block -->
     <div id="footer" class="footer">
         <table class="footer-table">
             <tr>
@@ -361,12 +352,12 @@
                     {{ company_address }}<br>
                     {{ company_zip }} {{ company_city }}
                 </td>
-                <td class="footer-center">
+                <td>
                     USt-IdNr.: {{ company_vat }}<br>
                     Steuernummer: {{ company_steuernummer }}<br>
                     Inhaber: {{ company_contact_name }}
                 </td>
-                <td class="footer-right">
+                <td>
                     <strong>{{ company_bank_name or 'Sparkasse Testdorf' }}</strong><br>
                     IBAN: {{ company_iban }}<br>
                     BIC: {{ company_bic }}
