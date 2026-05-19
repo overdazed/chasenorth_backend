@@ -7,7 +7,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
-// Email transporter setup (using Gmail as an example)
+// Email transporter setupp (using Gmail as an example)
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT, 10),
