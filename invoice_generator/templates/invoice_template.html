@@ -7,8 +7,8 @@
     <style>
         @page {
             size: A4;
-            /* Bottom margin set to 35mm to leave an explicit protection zone for the footer */
-            margin: 20mm 15mm 35mm 15mm; 
+            /* Creates a precise 30mm blank print zone at the bottom of the page */
+            margin: 20mm 15mm 30mm 15mm; 
         }
         * {
             box-sizing: border-box;
@@ -127,18 +127,16 @@
             line-height: 1.2;
         }
 
-        /* FIXED FOOTER: Pushed into the absolute bottom margin space.
-           This positions it close to the physical edge of the A4 page without text compression.
-        */
+        /* ABSOLUTE BOTTOM FIX: Calibrated specifically to sit flush at the paper edge */
         .footer {
             position: fixed;
-            bottom: -23mm; 
+            bottom: -27mm; /* Drags the container down into the very bottom margin edge */
             left: 0;
             right: 0;
-            height: 22mm;
-            border-top: 1px solid #d1d5db;
-            padding-top: 10px;
-            font-size: 10px;
+            height: 18mm;  /* Compact height to prevent inner floating gaps */
+            border-top: 1px solid #babcbe; /* Sleek structural divider rule */
+            padding-top: 6px;
+            font-size: 9.5px;
             color: #4b5563;
             background-color: white;
         }
@@ -148,9 +146,9 @@
             table-layout: fixed;
         }
         .footer-table td {
-            width: 25%; /* 4-column split matching example image layout */
+            width: 25%; 
             vertical-align: top;
-            line-height: 1.5;
+            line-height: 1.35;
             padding-right: 10px;
             text-align: left;
         }
@@ -160,8 +158,8 @@
         
         .page-counter {
             text-align: center;
-            margin-top: 10px;
-            font-size: 9px;
+            margin-top: 4px;
+            font-size: 8.5px;
             color: #9ca3af;
             width: 100%;
         }
