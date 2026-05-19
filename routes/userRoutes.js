@@ -27,9 +27,19 @@ router.post('/register', async (req, res) => {
             // if the user already exists, return a 400 status code
             return res.status(400).json({message: "User already exists"});
         // if the user does not exist, create a new user instance with the provided details
-        user = new User({ name, email: emailLower, password });
-        // save the user to the database
+        user = new User({ name, email: emailLower, password, emailVerified: false });
         await user.save();
+
+        // Generate verification token for initial signup
+        const verificationToken = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+
+        const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+        const { sendEmailVerification } = require('../services/emailService');
+        await sendEmailVerification(user.email, verificationLink);
 
         // we want to be able to send a token along with the user details
         // we will do this by making use of the JSON Web Token (JWT)
@@ -298,8 +308,9 @@ router.get('/verify-email', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if the email in token matches current user email
-        if (user.email !== decoded.newEmail) {
+        // Support both initial signup (email) and email change (newEmail)
+        const tokenEmail = decoded.email || decoded.newEmail;
+        if (user.email !== tokenEmail) {
             return res.status(400).json({ message: 'Email verification token is invalid or expired' });
         }
 
