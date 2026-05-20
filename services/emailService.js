@@ -7,12 +7,16 @@ const { compile } = require('handlebars');
 const resend = new Resend(process.env.RESEND_API_KEY, { region: 'eu-west-1' });
 
 // Compile email template
-const compileTemplate = async (templateName, data) => {
+const compileTemplate = async (templateName, data = {}) => {
     try {
         const templatePath = path.join(__dirname, '../templates', `${templateName}.html`);
         const source = await fs.readFile(templatePath, 'utf-8');
         const template = compile(source);
-        return template(data);
+        const mergedData = {
+            year: new Date().getFullYear(),
+            ...data
+        };
+        return template(mergedData);
     } catch (error) {
         console.error('Error compiling email template:', error);
         throw error;
@@ -108,7 +112,8 @@ const sendEmailVerification = async (email, verificationLink) => {
     try {
         const html = await compileTemplate('emailVerification', {
             verificationLink: verificationLink,
-            email: email
+            email: email,
+            year: new Date().getFullYear()
         });
 
         const info = await resend.emails.send({
@@ -126,7 +131,30 @@ const sendEmailVerification = async (email, verificationLink) => {
     }
 };
 
+const sendPasswordResetEmail = async (email, resetURL) => {
+    try {
+        const html = await compileTemplate('passwordReset', {
+            resetURL,
+            year: new Date().getFullYear()
+        });
+
+        const info = await resend.emails.send({
+            from: `ChaseNorth Support <${process.env.SYSTEM_EMAIL}>`,
+            to: email,
+            subject: 'Password Reset (valid for 10 minutes)',
+            html: html,
+            text: `Forgot your password? Click here to reset: ${resetURL}\n\nIf you didn't request this, please ignore this email.`
+        });
+        console.log('Password reset email sent:', info.id);
+        return info;
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     sendReportConfirmation,
-    sendEmailVerification
+    sendEmailVerification,
+    sendPasswordResetEmail
 };
