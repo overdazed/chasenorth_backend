@@ -44,7 +44,8 @@ router.post('/subscribe', async (req, res) => {
         const emailTemplatePath = path.join(__dirname, '../data/compass_newsletter.html');
         let emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
 
-        // Replace the discount code placeholder with the actual code
+        const logoBase64 = fs.readFileSync(path.join(__dirname, '../assets/logo_base64.txt'), 'utf8').trim();
+        emailTemplate = emailTemplate.replace('{{logoBase64}}', logoBase64);
         emailTemplate = emailTemplate.replace('COMPASS10', discountCode);
 
         // Save to database first
