@@ -3,6 +3,7 @@ const User = require('../models/User');
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs');
 const { protect } = require("../middleware/authMiddleware");
+const { sendEmailVerification } = require('../services/emailService');
 const authController = require("../controllers/authController");
 
 const router = express.Router();
@@ -468,6 +469,35 @@ router.put('/update-email', protect, async (req, res) => {
         console.error('Error updating email:', error);
         res.status(500).json({ message: 'Server error' });
     }
+});
+
+// @route   POST /api/users/resend-verification
+// @desc    Resend email verification link
+// @access  Private
+router.post('/resend-verification', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (user.emailVerified) {
+      return res.status(400).json({ message: 'Email already verified' });
+    }
+
+    const verificationToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+
+    await sendEmailVerification(user.email, verificationLink);
+
+    res.json({ message: 'Verification email sent successfully' });
+  } catch (error) {
+    console.error('Resend verification error:', error);
+    res.status(500).json({ message: 'Failed to send verification email' });
+  }
 });
 
 // @route   GET /api/users/verify-email
