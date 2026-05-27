@@ -309,10 +309,10 @@ HTML
                             {% if item.size %}{{ item.size }}{% endif %}
                         </div>
                     </td>
-                    <td class="text-right">{{ "%.2f"|format(item.price) }} €</td>
+                    <td class="text-right">{{ "%.2f"|format(item.price) }} {{ currencySymbol }}</td>
                     <td class="center">{{ item.quantity }}</td>
                     <td class="center">{{ order.taxRate }}%</td>
-                    <td class="text-right text-neutral-600">{{ "%.2f"|format(item_total) }} €</td>
+                    <td class="text-right text-neutral-600">{{ "%.2f"|format(item_total) }} {{ currencySymbol }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -322,29 +322,29 @@ HTML
             <table class="totals-table">
                 <tr>
                     <td>Subtotal:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.subtotal) }} €</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.subtotal) }} {{ currencySymbol }}</td>
                 </tr>
                 {% if order.discount and order.discount.amount > 0 %}
                 <tr>
                     <td>Discount:</td>
-                    <td class="text-red-600">-{{ "%.2f"|format(order.discount.amount) }} €</td>
+                    <td class="text-red-600">-{{ "%.2f"|format(order.discount.amount) }} {{ currencySymbol }}</td>
                 </tr>
                 {% endif %}
                 {% if order.tax and order.tax > 0 %}
                 <tr>
                     <td>Tax ({{ order.taxRate }}%):</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.tax) }} €</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.tax) }} {{ currencySymbol }}</td>
                 </tr>
                 {% endif %}
                 {% if order.shippingCost and order.shippingCost > 0 %}
                 <tr>
                     <td>Shipping:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.shippingCost) }} €</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.shippingCost) }} {{ currencySymbol }}</td>
                 </tr>
                 {% endif %}
                 <tr class="total-row">
                     <td>Total:</td>
-                    <td class="text-red-600">{{ "%.2f"|format(order.total) }} €</td>
+                    <td class="text-red-600">{{ "%.2f"|format(order.total) }} {{ currencySymbol }}</td>
                 </tr>
             </table>
         </div>
