@@ -31,7 +31,7 @@ router.post('/generate', protect, async (req, res) => {
         const orderItems = order.orderItems || [];
 
         const orderData = {
-            items: orderItems.map(item => ({
+            orderItems: orderItems.map(item => ({
                 name: item.name,
                 description: item.description || '',
                 quantity: item.quantity,
@@ -44,6 +44,7 @@ router.post('/generate', protect, async (req, res) => {
                       orderItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0),
             discount: order.discount || null,
             tax: order.tax || 0,
+            taxRate: parseFloat(process.env.TAX_RATE) || 19,
             shippingCost: order.shippingCost || order.shippingPrice || 0, // Use shippingCost first, fallback to shippingPrice for backward compatibility
             total: order.totalPrice || 
                    ((order.subtotal || 0) + (order.shippingCost || 0) - ((order.discount && order.discount.amount) || 0)),

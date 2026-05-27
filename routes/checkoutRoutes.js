@@ -192,12 +192,48 @@ router.post('/:id/finalize', protect, async (req, res) => {
                     email: process.env.COMPANY_EMAIL || 'billing@adventurestore.com',
                     phone: process.env.COMPANY_PHONE || '+1 (555) 123-4567',
                     website: process.env.COMPANY_WEBSITE || 'www.adventurestore.com',
-                    tax_rate: parseFloat(process.env.TAX_RATE) || 0
+                    tax_rate: parseFloat(process.env.TAX_RATE) || 0,
+                    bank_name: process.env.COMPANY_BANK_NAME || '',
+                    iban: process.env.COMPANY_IBAN || '',
+                    bic: process.env.COMPANY_BIC || '',
+                    steuernummer: process.env.COMPANY_STEUERNUMMER || '',
+                    currency: process.env.CURRENCY || 'EUR'
+                };
+
+                // Prepare order data for invoice generation
+                const orderData = {
+                    orderItems: finalOrder.orderItems.map(item => ({
+                        name: item.name,
+                        description: item.description || '',
+                        quantity: item.quantity,
+                        price: item.price,
+                        total: item.quantity * item.price,
+                        size: item.size,
+                        color: item.color
+                    })),
+                    subtotal: finalOrder.subtotal,
+                    discount: finalOrder.discount,
+                    tax: finalOrder.tax || 0,
+                    taxRate: parseFloat(process.env.TAX_RATE) || 19,
+                    shippingCost: finalOrder.shippingCost || 0,
+                    total: finalOrder.totalPrice,
+                    shippingAddress: {
+                        firstName: finalOrder.shippingAddress.firstName || '',
+                        lastName: finalOrder.shippingAddress.lastName || '',
+                        company: finalOrder.shippingAddress.company || '',
+                        address: finalOrder.shippingAddress.address || '',
+                        address2: finalOrder.shippingAddress.address2 || '',
+                        city: finalOrder.shippingAddress.city || '',
+                        postalCode: finalOrder.shippingAddress.postalCode || '',
+                        state: finalOrder.shippingAddress.state || '',
+                        country: finalOrder.shippingAddress.country || ''
+                    },
+                    invoiceNumber: finalOrder.invoiceNumber
                 };
 
                 // Generate and save the invoice
                 const { invoiceNumber, invoicePath } = await generateAndSaveInvoice(
-                    finalOrder,
+                    orderData,
                     companyData,
                     {
                         name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
