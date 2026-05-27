@@ -1,13 +1,3 @@
-To fix the footer appearing at the top of the page and to prevent it from overlapping with your line items on multi-page invoices, two main adjustments are required:
-
-Move the Footer HTML to the Bottom: In many modern PDF generation engines (such as Puppeteer, headless Chrome, or wkhtmltopdf), placing a position: fixed element at the top of the HTML causes it to render incorrectly at the top coordinates. Moving it to the very end of the <body> resolves this.
-
-Increase the @page Bottom Margin: Your footer is 22mm high, but the @page bottom margin was only set to 10mm. This forces the content to print over the footer. Increasing the page's bottom margin to 32mm creates a dedicated blank safety zone at the bottom of every page where the footer can sit cleanly without overlapping any text.
-
-Here is your fully updated, ready-to-use template code:
-
-HTML
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
