@@ -37,10 +37,7 @@ class InvoiceService {
                     // Only include invoiceNumber if it's a valid format
                     invoiceNumber: (invoiceNumber && invoiceNumber.startsWith('INV-')) ? invoiceNumber : null
                 },
-                company_data: {
-                    ...companyData,
-                    currency: process.env.CURRENCY || "EUR"
-                }
+                company_data: companyData
             };
 
             // Debug log the data being sent

@@ -237,6 +237,8 @@ class InvoiceGenerator:
             # Debug logging
             sys.stderr.write("=== Context for template ===\n")
             sys.stderr.write(f"Invoice number in context: {context['invoice_number']}\n")
+            sys.stderr.write(f"Currency in context: {context.get('currency', 'NOT SET')}\n")
+            sys.stderr.write(f"Currency symbol in context: {context.get('currencySymbol', 'NOT SET')}\n")
             sys.stderr.write("============================\n")
 
             # Generate PDF
