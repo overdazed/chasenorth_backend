@@ -231,7 +231,7 @@ class InvoiceGenerator:
                 'due_date': (datetime.now() + relativedelta(days=30)).strftime('%B %d, %Y'),
                 'total': final_total,
                 'currency': company_data.get('currency', 'EUR'),
-                'currencySymbol': '€' if company_data.get('currency', 'EUR') == 'EUR' else company_data.get('currency', 'EUR')
+                'currencySymbol': '€' if company_data.get('currency', 'EUR') in ['EUR', 'DE'] else company_data.get('currency', 'EUR')
             }
 
             # Debug logging

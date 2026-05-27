@@ -64,6 +64,10 @@ router.post('/generate', protect, async (req, res) => {
         console.log('Prepared order data:', JSON.stringify(orderData, null, 2));
 
         // Company information
+        // Normalize currency: DE (country code) should be treated as EUR (currency code)
+        const rawCurrency = process.env.CURRENCY || "EUR";
+        const normalizedCurrency = rawCurrency === "DE" ? "EUR" : rawCurrency;
+        
         const companyData = {
             name: process.env.COMPANY_NAME,
             contact_name: process.env.COMPANY_CONTACT_NAME,
@@ -81,7 +85,7 @@ router.post('/generate', protect, async (req, res) => {
             iban: process.env.COMPANY_IBAN,
             bic: process.env.COMPANY_BIC,
             steuernummer: process.env.COMPANY_STEUERNUMMER,
-            currency: process.env.CURRENCY || "EUR"
+            currency: normalizedCurrency
         };
 
         // Customer information
