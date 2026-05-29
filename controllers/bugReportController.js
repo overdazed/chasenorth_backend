@@ -1,14 +1,14 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 require('dotenv').config();
+
+const resend = new Resend(process.env.RESEND_API_KEY, { region: 'eu-west-1' });
 
 const sendBugReport = async (req, res) => {
     try {
         const { subject, description, email, pageUrl } = req.body;
-        // const attachments = req.files?.attachments || [];
-        const attachments = req.files || []; // Changed from req.files?.attachments
+        const attachments = req.files || [];
 
         // Log incoming request for debugging
-
         console.log('Request body:', { subject, description, email, pageUrl });
         console.log('Files received:', {
             count: attachments.length,
@@ -30,7 +30,7 @@ const sendBugReport = async (req, res) => {
         }
 
         // Check if required environment variables are set
-        const requiredEnvVars = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_SECURE', 'SUPPORT_EMAIL', 'SUPPORT_PASS', 'SYSTEM_EMAIL'];
+        const requiredEnvVars = ['SUPPORT_EMAIL', 'SYSTEM_EMAIL'];
         const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
         if (missingVars.length > 0) {
@@ -42,30 +42,16 @@ const sendBugReport = async (req, res) => {
             });
         }
 
-        // Configure nodemailer transporter
-        const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: parseInt(process.env.SMTP_PORT, 10),
-            secure: process.env.SMTP_SECURE === 'true',
-            auth: {
-                user: process.env.SYSTEM_EMAIL,
-                pass: process.env.SYSTEM_PASS
-            }
-        });
+        // Format attachments for Resend
+        const emailAttachments = attachments.map((file, index) => ({
+            filename: file.originalname,
+            content: file.buffer.toString('base64'),
+            contentType: file.mimetype
+        }));
 
-        // Format attachments for email
-        const emailAttachments = attachments.map((file, index) => {
-            return {
-                filename: file.originalname,
-                content: file.buffer,
-                contentType: file.mimetype,
-                cid: `image${index}@bugreport`  // Add @bugreport to make it a valid Content-ID
-            };
-        });
-
-        // Email options
-        const mailOptions = {
-            from: `"ChaseNorth Support" <${process.env.SYSTEM_EMAIL}>`,
+        // Email options for Resend
+        const emailOptions = {
+            from: `ChaseNorth Support <${process.env.SYSTEM_EMAIL}>`,
             to: process.env.SUPPORT_EMAIL,
             replyTo: email,
             subject: `[Bug Report] ${subject}`,
@@ -83,8 +69,7 @@ const sendBugReport = async (req, res) => {
                       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
                         ${emailAttachments.map((file, index) => `
                           <div style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; text-align: center;">
-                            <img src="cid:image${index}@bugreport" style="max-width: 100%; height: auto; border-radius: 3px;" alt="Screenshot ${index + 1}">
-                            <p style="margin: 5px 0 0; font-size: 12px; color: #666;">Screenshot ${index + 1}</p>
+                            <p style="margin: 5px 0; font-size: 12px; color: #666;">Screenshot ${index + 1}</p>
                           </div>
                         `).join('')}
                       </div>
@@ -94,21 +79,17 @@ const sendBugReport = async (req, res) => {
                     This is an automated message. Please do not reply directly to this email.
                   </p>
                 </div>
-              `,
+            `,
             attachments: emailAttachments
         };
 
-        // Send email
-        await transporter.sendMail(mailOptions);
+        // Send email via Resend
+        await resend.emails.send(emailOptions);
         console.log('Bug report email sent successfully');
 
         res.status(200).json({
             success: true,
-            message: 'Bug report submitted successfully!',
-            // data: {
-            //     reference: `BUG-${Date.now()}`,
-            //     email: email
-            // }
+            message: 'Bug report submitted successfully!'
         });
 
     } catch (error) {
