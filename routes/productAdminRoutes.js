@@ -50,6 +50,20 @@ router.get("/collections", protect, admin, async (req, res) => {
     }
 });
 
+// Get all unique brands from existing products
+// @route GET /api/admin/products/brands
+// @desc Get unique brands (Admin only)
+// @access Private/Admin
+router.get("/brands", protect, admin, async (req, res) => {
+    try {
+        const brands = await Product.distinct('brand');
+        res.json(brands.filter(Boolean).sort());
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
 // Create a route to retrieve a list of all products in the system
 // @route GET /api/admin/products
 // @desc Get all products (Admin only)
