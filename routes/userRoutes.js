@@ -135,11 +135,11 @@ router.post('/register', async (req, res) => {
 
     } catch (error) {
 
-        // If there is an error, we will log it
+        // If there is an error, we will log it with details
+        console.error('Registration error:', error.message);
+        console.error('Stack:', error.stack);
 
-        console.log(error);
-
-        res.status(500).send("Server Error");
+        res.status(500).json({ message: "Server Error", error: error.message });
 
     }
 
