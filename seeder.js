@@ -12,7 +12,7 @@ const products = require("./data/products");
 
 dotenv.config();
 
-// connect to mongoDB database
+// connect to mongoDB database hihi
 mongoose.connect(process.env.MONGO_URI)
 
 // function to seed the database

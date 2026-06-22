@@ -54,7 +54,7 @@ const sendBugReport = async (req, res) => {
             from: `ChaseNorth Support <${process.env.SYSTEM_EMAIL}>`,
             to: process.env.SUPPORT_EMAIL,
             replyTo: email,
-            subject: `[Bug Report] ${subject}`,
+            subject: `Bug Report: ${subject}`,
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                   <h2 style="color: #333;">New Bug Report</h2>
@@ -80,6 +80,17 @@ const sendBugReport = async (req, res) => {
                   </p>
                 </div>
             `,
+            text: `New Bug Report
+
+From: ${email}
+Page URL: ${pageUrl}
+
+Description:
+${description}
+
+${emailAttachments.length > 0 ? `Attached Screenshots: ${emailAttachments.length}` : 'No attachments'}
+
+This is an automated message. Please do not reply directly to this email.`,
             attachments: emailAttachments
         };
 
