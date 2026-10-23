@@ -380,15 +380,23 @@ router.get('/best-seller', async (req, res) => {
 
 // New Arrivals
 // @route GET /api/products/new-arrivals
-// @desc Retrieve the 10 most recent products
+// @desc Retrieve the 10 most recent products, optionally filtered by gender
 // @access Public
 router.get('/new-arrivals', async (req, res) => {
     try {
+        const { gender } = req.query;
+
+        // Build query object
+        let query = {};
+        if (gender) {
+            query.gender = gender;
+        }
+
         // Fetch the 10 most recent products, sorted by newest first
-        const newArrivals = await Product.find({})
+        const newArrivals = await Product.find(query)
             .sort({ createdAt: -1 })
             .limit(10);
-        
+
         // respond with the list of the 10 most recent products
         res.json(newArrivals);
     } catch (error) {
