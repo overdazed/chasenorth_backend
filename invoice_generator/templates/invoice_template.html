@@ -147,19 +147,6 @@
             page-break-after: always;
         }
         
-        @media print {
-            .footer {
-                position: absolute;
-                bottom: 0;
-                background-color: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            
-            @page {
-                margin-bottom: 32mm; /* Ensure space for footer */
-            }
-        }
         .footer-table {
             width: 100%;
             border-collapse: collapse;
