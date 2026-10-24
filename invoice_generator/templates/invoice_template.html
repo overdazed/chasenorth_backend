@@ -131,8 +131,8 @@
 
         /* FIXED POSITION FOOTER: Placed relative to the printable page boundaries */
         .footer {
-            position: fixed;
-            bottom: -20mm; /* Sits perfectly within the 32mm page bottom margin zone */
+            position: absolute;
+            bottom: 0mm; /* Sticks to the bottom of every page in PDF */
             left: 0;
             right: 0;
             height: 22mm;  
@@ -141,6 +141,24 @@
             font-size: 9px;
             color: #4b5563;
             background-color: white;
+            
+            /* PDF-specific properties */
+            page-break-inside: avoid;
+            page-break-after: always;
+        }
+        
+        @media print {
+            .footer {
+                position: absolute;
+                bottom: 0;
+                background-color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            @page {
+                margin-bottom: 32mm; /* Ensure space for footer */
+            }
         }
         .footer-table {
             width: 100%;

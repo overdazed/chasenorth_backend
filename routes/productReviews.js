@@ -578,6 +578,12 @@ router.put('/:id', protect, uploadFiles, async (req, res) => {
             { new: true, runValidators: true }
         ).populate('user', 'name email');
 
+        // Recalculate the product's average rating after updating the review.
+        // findByIdAndUpdate does not trigger the post('save') hook, so we
+        // must call calculateAverageRating manually to keep the product's
+        // global score in sync with the updated review scores.
+        await Review.calculateAverageRating(review.product);
+
         res.json({
             success: true,
             message: 'Review updated successfully',
