@@ -129,9 +129,12 @@
             line-height: 1.2;
         }
 
-        /* FIXED POSITION FOOTER: Placed relative to the printable page boundaries */
+        /* FIXED POSITION FOOTER: position:fixed makes xhtml2pdf repeat the
+           footer on every rendered page, anchored to the physical page box.
+           bottom:0mm + @page bottom margin (32mm) => footer sits at the
+           very bottom of every page, with content area stopping above it. */
         .footer {
-            position: absolute;
+            position: fixed;
             bottom: 0mm; /* Sticks to the bottom of every page in PDF */
             left: 0;
             right: 0;
