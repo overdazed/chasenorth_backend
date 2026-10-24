@@ -208,7 +208,7 @@ exports.updateProfile = async (req, res, next) => {
                         .upload(fileName, Buffer.from(filteredBody.profilePicture.split(',')[1], 'base64'), {
                             contentType: 'image/jpeg',
                             upsert: true,  // This will overwrite the file if it exists
-                            cacheControl: '3600'  // Set cache control to 1 hour to prevent immediate deletion
+                            cacheControl: '0'  // max-age=0: never serve a stale image after the user changes their picture
                         });
                     
                     if (uploadError) {
@@ -222,11 +222,12 @@ exports.updateProfile = async (req, res, next) => {
                         .from('profile-pictures')
                         .getPublicUrl(fileName);
 
-                    // Update the profile picture URL in the filtered body
-                    filteredBody.profilePicture = publicUrlData.publicUrl;
-                    // Debug: Log the final state of the profile picture
-                    console.log('Final profile picture URL:', filteredBody.profilePicture);
-                    console.log('Profile picture updated successfully:', filteredBody.profilePicture);
+                    // Update the profile picture URL in the filtered body.
+                    // Cache-bust per upload: the storage path is deterministic
+                    // (profile-pictures/<userId>.jpg), so overwriting the file
+                    // at the same URL would otherwise be served stale from the
+                    // browser/CDN cache (Cache-Control: max-age=3600, no revalidation).
+                    filteredBody.profilePicture = publicUrlData.publicUrl + '?v=' + Date.now();
                 } catch (error) {
                     console.error('Error handling profile picture upload:', error);
                 }
