@@ -76,6 +76,7 @@ const initializeCounters = require('./initializeCounter');
 const adminReportRoutes = require('./routes/adminReportRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const memoryUploadRoutes = require('./routes/memoryUploads');
 
 // Test route from minimal.js
 app.get('/api/test', (req, res) => {
@@ -106,6 +107,7 @@ app.use('/api/contact', contactRoutes);
 
 // Additional routes (commented out for now - enable one by one as needed)
 app.use('/api/upload', uploadRoutes);
+app.use('/api/memory-uploads', memoryUploadRoutes);
 // app.use('/api/subscribe', subscribeRoute);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/products', productAdminRoutes);
