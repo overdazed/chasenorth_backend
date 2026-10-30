@@ -5,7 +5,7 @@ const supabase = require('../config/supabase');
 // Upload files to Memory-Prints bucket via backend (avoids RLS issues)
 router.post('/', async (req, res) => {
   try {
-    const { userId, userEmail, fileName, fileData, fileType } = req.body;
+    const { userId, userEmail, albumPath, fileName, fileData, fileType } = req.body;
 
     if (!supabase) {
       return res.status(500).json({ 
@@ -19,10 +19,13 @@ router.post('/', async (req, res) => {
       });
     }
 
-    // Use email as folder name (sanitized) or fallback to userId
+    // Use email as base folder (sanitized)
     const folderName = userEmail 
       ? userEmail.replace(/[^a-zA-Z0-9._-]/g, '_') 
       : userId;
+
+    // Add album path if provided (for subfolders)
+    const albumFolder = albumPath ? `/${albumPath}` : '';
 
     // Validate file size (50MB limit)
     const buffer = Buffer.from(fileData, 'base64');
@@ -45,7 +48,8 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const filePath = `${folderName}/${Date.now()}_${fileName}`;
+    // Use album folder in path if provided
+    const filePath = `${folderName}${albumFolder}/${Date.now()}_${fileName}`;
 
     // Upload using service role key (bypasses RLS)
     const { data, error } = await supabase.storage
