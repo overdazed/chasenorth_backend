@@ -31,6 +31,7 @@ const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const checkoutRoutes = require('./routes/checkoutRoutes');
+const memoryUploadRoutes = require('./routes/memoryUploads');
 
 // Routes
 app.get('/api/test', (req, res) => {
@@ -47,6 +48,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/checkout', checkoutRoutes);
+app.use('/api/memory-uploads', memoryUploadRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
