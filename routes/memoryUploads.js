@@ -5,7 +5,7 @@ const supabase = require('../config/supabase');
 // Upload files to Memory-Prints bucket via backend (avoids RLS issues)
 router.post('/', async (req, res) => {
   try {
-    const { userId, fileName, fileData, fileType } = req.body;
+    const { userId, userEmail, fileName, fileData, fileType } = req.body;
 
     if (!supabase) {
       return res.status(500).json({ 
@@ -18,6 +18,11 @@ router.post('/', async (req, res) => {
         error: 'Missing required fields: userId, fileName, fileData' 
       });
     }
+
+    // Use email as folder name (sanitized) or fallback to userId
+    const folderName = userEmail 
+      ? userEmail.replace(/[^a-zA-Z0-9._-]/g, '_') 
+      : userId;
 
     // Validate file size (50MB limit)
     const buffer = Buffer.from(fileData, 'base64');
@@ -40,7 +45,7 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const filePath = `${userId}/${Date.now()}_${fileName}`;
+    const filePath = `${folderName}/${Date.now()}_${fileName}`;
 
     // Upload using service role key (bypasses RLS)
     const { data, error } = await supabase.storage
@@ -68,6 +73,87 @@ router.post('/', async (req, res) => {
 
   } catch (error) {
     console.error('Upload error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all files for a specific user by email
+router.get('/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    if (!supabase) {
+      return res.status(500).json({ error: 'Supabase not configured' });
+    }
+
+    // Sanitize email for use as folder path
+    const sanitizedEmail = email.replace(/[^a-zA-Z0-9._-]/g, '_');
+    
+    // List all files under this user's folder
+    const { data, error } = await supabase.storage
+      .from('Memory-Prints')
+      .list(sanitizedEmail);
+
+    if (error) throw error;
+
+    // Generate public URLs for all files
+    const filesWithUrls = data.map(file => {
+      const filePath = `${sanitizedEmail}/${file.name}`;
+      const { data: publicUrlData } = supabase.storage
+        .from('Memory-Prints')
+        .getPublicUrl(filePath);
+      
+      return {
+        name: file.name,
+        size: file.metadata?.size || 0,
+        contentType: file.metadata?.contentType || 'unknown',
+        url: publicUrlData.publicUrl,
+        uploadedAt: new Date(file.created_at).toISOString()
+      };
+    });
+
+    res.json({
+      success: true,
+      files: filesWithUrls
+    });
+
+  } catch (error) {
+    console.error('List error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get user's uploads for hash matching
+router.post('/match', async (req, res) => {
+  try {
+    const { imageHash, userId } = req.body;
+    
+    if (!supabase) {
+      return res.status(500).json({ error: 'Supabase not configured' });
+    }
+
+    // Query database for matching hash
+    const { data: uploads, error } = await supabase
+      .from('memory_prints')
+      .select('media_url, signature_hash, user_email, created_at')
+      .eq('signature_hash', imageHash)
+      .single();
+
+    if (error) {
+      return res.json({ success: false, message: 'No matching memory found' });
+    }
+
+    res.json({
+      success: true,
+      media: {
+        url: uploads.media_url,
+        email: uploads.user_email,
+        createdAt: uploads.created_at
+      }
+    });
+
+  } catch (error) {
+    console.error('Match error:', error);
     res.status(500).json({ error: error.message });
   }
 });
