@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
+const { protect } = require('../middleware/authMiddleware');
 
 // Upload files to Memory-Prints bucket via backend (avoids RLS issues)
-router.post('/', async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
     const { userId, userEmail, albumPath, fileName, fileData, fileType } = req.body;
 
@@ -17,6 +18,11 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ 
         error: 'Missing required fields: userId, fileName, fileData' 
       });
+    }
+    
+    // Ensure the authenticated user matches the requested userId
+    if (req.user && userId && req.user._id.toString() !== String(userId)) {
+      return res.status(403).json({ error: 'Not authorized to upload for this user' });
     }
 
     // Use email as base folder (sanitized)
