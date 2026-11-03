@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const { protect } = require('../middleware/authMiddleware');
+const MemoryPrint = require('../models/MemoryPrint');
 
 // Upload files to Memory-Prints bucket via backend (avoids RLS issues)
 router.post('/', protect, async (req, res) => {
@@ -136,34 +137,56 @@ router.get('/:email', async (req, res) => {
 // Get user's uploads for hash matching
 router.post('/match', async (req, res) => {
   try {
-    const { imageHash, userId } = req.body;
-    
-    if (!supabase) {
-      return res.status(500).json({ error: 'Supabase not configured' });
+    const { imageHash } = req.body;
+
+    if (!imageHash) {
+      return res.status(400).json({ success: false, message: 'Missing imageHash' });
     }
 
-    // Query database for matching hash
-    const { data: uploads, error } = await supabase
-      .from('memory_prints')
-      .select('media_url, signature_hash, user_email, created_at')
-      .eq('signature_hash', imageHash)
-      .single();
+    const record = await MemoryPrint.findOne({ signatureHash: imageHash });
 
-    if (error) {
+    if (!record) {
       return res.json({ success: false, message: 'No matching memory found' });
     }
 
     res.json({
       success: true,
       media: {
-        url: uploads.media_url,
-        email: uploads.user_email,
-        createdAt: uploads.created_at
+        url: record.mediaUrl || (record.fileUrls && record.fileUrls[0]),
+        email: record.userEmail,
+        files: record.fileUrls || [],
+        albumPath: record.albumPath,
+        createdAt: record.createdAt
       }
     });
 
   } catch (error) {
     console.error('Match error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Save a memory print record (signature hash -> uploaded files)
+router.post('/record', protect, async (req, res) => {
+  try {
+    const { signatureHash, fileUrls, albumPath, userEmail, userId } = req.body;
+
+    if (!signatureHash) {
+      return res.status(400).json({ success: false, message: 'Missing signatureHash' });
+    }
+
+    const record = await MemoryPrint.create({
+      signatureHash,
+      userId: userId || (req.user && req.user._id ? req.user._id.toString() : undefined),
+      userEmail: userEmail || (req.user && req.user.email),
+      albumPath,
+      fileUrls: fileUrls || [],
+      mediaUrl: (fileUrls && fileUrls[0]) || undefined
+    });
+
+    res.json({ success: true, record });
+  } catch (error) {
+    console.error('Record save error:', error);
     res.status(500).json({ error: error.message });
   }
 });
