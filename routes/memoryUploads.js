@@ -55,8 +55,8 @@ router.post('/', protect, async (req, res) => {
       });
     }
 
-    // Use album folder in path if provided
-    const filePath = `${folderName}${albumFolder}/${Date.now()}_${fileName}`;
+    // Use provided file name directly (no timestamp prefix)
+    const filePath = `${folderName}${albumFolder}/${fileName}`;
 
     // Upload using service role key (bypasses RLS)
     const { data, error } = await supabase.storage
