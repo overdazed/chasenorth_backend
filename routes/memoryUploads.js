@@ -135,7 +135,7 @@ router.get('/:email', async (req, res) => {
 });
 
 // Get user's uploads for hash matching
-router.post('/match', async (req, res) => {
+router.post('/match', protect, async (req, res) => {
   try {
     const { imageHash } = req.body;
 
@@ -149,12 +149,52 @@ router.post('/match', async (req, res) => {
       return res.json({ success: false, message: 'No matching memory found' });
     }
 
+    // Only the owning user (by email) may view the files
+    if (!req.user || !record.userEmail || record.userEmail.toLowerCase() !== String(req.user.email || '').toLowerCase()) {
+      return res.status(403).json({ success: false, message: 'Not authorized to view this memory' });
+    }
+
+    // Convert stored paths/URLs into (short-lived) signed URLs so private bucket files can be viewed
+    const toStoragePath = (value) => {
+      if (!value) return null;
+      const marker = '/object/public/Memory-Prints/';
+      const idx = value.indexOf(marker);
+      if (idx !== -1) {
+        return decodeURIComponent(value.substring(idx + marker.length));
+      }
+      // Already a storage path
+      return value.replace(/^\/+/, '');
+    };
+
+    const signedFiles = [];
+    for (const value of (record.fileUrls || [])) {
+      const path = toStoragePath(value);
+      if (!path) continue;
+      const { data: signed, error } = await supabase.storage
+        .from('Memory-Prints')
+        .createSignedUrl(path, 3600);
+      if (signed && signed.signedUrl) {
+        signedFiles.push(signed.signedUrl);
+      } else {
+        signedFiles.push(value);
+      }
+    }
+
+    const firstPath = toStoragePath(record.mediaUrl || (record.fileUrls && record.fileUrls[0]));
+    let signedMediaUrl = record.mediaUrl;
+    if (firstPath) {
+      const { data: signed } = await supabase.storage
+        .from('Memory-Prints')
+        .createSignedUrl(firstPath, 3600);
+      if (signed && signed.signedUrl) signedMediaUrl = signed.signedUrl;
+    }
+
     res.json({
       success: true,
       media: {
-        url: record.mediaUrl || (record.fileUrls && record.fileUrls[0]),
+        url: signedMediaUrl,
         email: record.userEmail,
-        files: record.fileUrls || [],
+        files: signedFiles.length ? signedFiles : (record.fileUrls || []),
         albumPath: record.albumPath,
         createdAt: record.createdAt
       }
