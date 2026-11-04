@@ -143,7 +143,37 @@ router.post('/match', protect, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Missing imageHash' });
     }
 
-    const record = await MemoryPrint.findOne({ signatureHash: imageHash });
+    // Fuzzy match: find the stored record with the smallest Hamming distance
+    const candidates = await MemoryPrint.find({ userEmail: req.user.email });
+    if (!candidates || candidates.length === 0) {
+      return res.json({ success: false, message: 'No matching memory found' });
+    }
+
+    const hammingDistance = (a, b) => {
+      if (!a || !b || a.length !== b.length) return Number.MAX_SAFE_INTEGER;
+      let dist = 0;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) dist++;
+      }
+      return dist;
+    };
+
+    let best = null;
+    let bestDist = Number.MAX_SAFE_INTEGER;
+    for (const candidate of candidates) {
+      const dist = hammingDistance(imageHash, candidate.signatureHash);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = candidate;
+      }
+    }
+
+    const THRESHOLD = 200;
+    if (!best || bestDist > THRESHOLD) {
+      return res.json({ success: false, message: 'No matching memory found' });
+    }
+
+    const record = best;
 
     if (!record) {
       return res.json({ success: false, message: 'No matching memory found' });
